@@ -1,4 +1,14 @@
+.navbar {
+	background-color: rgb(255, 255, 255);
+}
 .navbar-brand {
+	padding-top: 38px;
+	padding-bottom: 38px;
+	color: rgb(27,116,182);
 	font-family: Roboto, sans-serif;
+	font-size: 38px;
+}
 
+#signup {
+	height: 100%;
 }
