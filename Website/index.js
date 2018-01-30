@@ -14,7 +14,8 @@ module.exports = function(app, dbcon) {
 	delete user if haven't verified after 24hrs,
 	fix res.end [-s] linking empty htmls,
 	create temporary user before creating an actual user pre-confirmation,
-	put mail log-in credentials (change password!) to the database
+	put mail log-in credentials (change password!) to the database, 
+	add actual e-mail to send confirmation to from db
 	*/
 
 	var smtpTransport = nodemailer.createTransport({
@@ -33,7 +34,7 @@ module.exports = function(app, dbcon) {
 		link = "http://" + host + "/verify?id=" + rnd;
 		mailOptions = {
 			from : 'Do Not Reply <unitokenemailconfirmation@gmail.com>',
-			to : 'sasha130297@gmail.com',
+			to : 'example@gmail.com',
 			subject : 'Unitoken registration confirmation',
 			html : 'Please click on the link to verify your e-mail.<br><a href='
 				+ link + '>Click here to verify</a>'
