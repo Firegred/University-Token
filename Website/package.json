@@ -1,0 +1,9 @@
+{
+	"name": "unitoken",
+	"dependencies": {
+		"express": "latest",
+		"nodemailer": "latest",
+		"mysql": "latest",
+		"path" : "latest"
+	}
+}
