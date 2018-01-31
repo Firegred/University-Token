@@ -10,7 +10,14 @@ app.set('views',  path.join(__dirname, "views"));
 var dbcon = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	database: "mydb"
+	database: "mydb",
+	multipleStatements: true
+});
+
+dbcon.connect(function(err){
+	if(err){
+		console.log(err);
+	}
 });
 
 /* Routing of links */
