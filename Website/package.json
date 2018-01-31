@@ -2,8 +2,9 @@
 	"name": "unitoken",
 	"dependencies": {
 		"express": "latest",
-		"nodemailer": "latest",
 		"mysql": "latest",
-		"path" : "latest"
+		"nodemailer": "latest",
+		"path": "latest",
+		"promise-mysql": "^3.2.0"
 	}
 }
