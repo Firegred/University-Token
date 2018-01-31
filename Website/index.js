@@ -13,23 +13,30 @@ module.exports = function(app, dbcon) {
 	documentation,
 	delete user if haven't verified after 24hrs,
 	fix res.end [-s] linking empty htmls,
-	create temporary user before creating an actual user pre-confirmation,
 	put mail log-in credentials (change password!) to the database, 
 	add actual e-mail to send confirmation to from db
 	*/
 
 	var smtpTransport = nodemailer.createTransport({
-    	service: 'gmail',
-    	auth: {
-        	user: 'unitokenemailconfirmation@gmail.com',
-     		pass: 'hP2-WtP-fCG-E9d'
-    	}
+		service: 'gmail',
+		auth: {
+			user: 'unitokenemailconfirmation@gmail.com',
+			pass: 'hP2-WtP-fCG-E9d'
+		}
 	});
 
-	var host, rnd, mailOptions;
+	var host;
 
 	app.get('/sendconfirmation', function(req, res){
 		rnd = (1 + Math.random()).toString(36).substring(2, 18);
+		qr = "UPDATE temp_users SET verification_code = '"
+		+ rnd + "' WHERE email = '" + "example@gmail.com" + "'";
+		dbcon.query(qr, function(err, result){
+			if(err){
+				console.log(err);
+			}
+			console.log(result.affectedRows + " record(s) updated");
+		});
 		host = req.get('host');
 		link = "http://" + host + "/verify?id=" + rnd;
 		mailOptions = {
@@ -37,7 +44,7 @@ module.exports = function(app, dbcon) {
 			to : 'example@gmail.com',
 			subject : 'Unitoken registration confirmation',
 			html : 'Please click on the link to verify your e-mail.<br><a href='
-				+ link + '>Click here to verify</a>'
+			+ link + '>Click here to verify</a>'
 		};
 		smtpTransport.sendMail(mailOptions, function(error, response){
 			if(error){
@@ -52,24 +59,27 @@ module.exports = function(app, dbcon) {
 
 	app.get('/verify', function(req, res){
 		if((req.protocol + "://" + req.get('host')) == ("http://" + host)){
-			if(req.query.id == rnd){
-				res.end("Email " + mailOptions.to + " has been successfully verified");
-				dbcon.connect(function(err){
-					if (err) {
-						console.log("Couldn't connect to the database");
-						res.end("Some issues were encountered. Please, verify your e-mail later.")
+			qr = "SELECT * FROM temp_users WHERE email = '" + "example@gmail.com" + "'";
+			dbcon.query(qr, function(err, result){
+				if(err){throw err;}
+				console.log(result);
+				if(!result.length){
+					console.log("No temp account associated with current email");
+					res.end("This link has expired.");
+				} else {
+					if(req.query.id == result[0].verification_code){
+						qr = "DELETE FROM temp_users WHERE email = '" + result[0].email + "'; ";
+						qr += "INSERT INTO perm_users (email) values ('" + result[0].email + "');"; 
+						dbcon.query(qr, function(err, result){
+							if(err) throw err;
+							console.log(result.affectedRows + " record(s) updated");
+						});
+						res.end("Email " + result[0].email + " has been successfully verified");
+					} else {
+						res.end("Bad request");
 					}
-					qr = "UPDATE users SET flag_verified = 1 WHERE email = '" + mailOptions.to + "'";
-					dbcon.query(qr, function(err, result){
-						if(err) {
-							console.log(err);
-						}
-						console.log(result.affectedRows + " record(s) updated");
-					});
-				});
-			} else {
-				res.end("Bad request");
-			}
+				}
+			});
 		} else {
 			res.end("Wrong confirmation URL");
 		}
