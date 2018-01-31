@@ -1,0 +1,10 @@
+{
+	"name": "unitoken",
+	"dependencies": {
+		"express": "latest",
+		"mysql": "latest",
+		"nodemailer": "latest",
+		"path": "latest",
+		"promise-mysql": "^3.2.0"
+	}
+}
