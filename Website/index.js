@@ -33,7 +33,7 @@ module.exports = function(app, dbcon) {
 	app.get('/sendconfirmation', function(req, res){
 		rnd = (1 + Math.random()).toString(36).substring(2, 18);
 		qr = "UPDATE temp_users SET verification_code = '"
-		+ rnd + "' WHERE email = '" + "sasha130297@gmail.com" + "'";
+		+ rnd + "' WHERE email = '" + "example@gmail.com" + "'";
 		dbcon.query(qr, function(err, result){
 			if(err){
 				console.log(err);
@@ -43,7 +43,7 @@ module.exports = function(app, dbcon) {
 		link = "http://" + host + "/verify?id=" + rnd;
 		mailOptions = {
 			from : 'Do Not Reply <unitokenemailconfirmation@gmail.com>',
-			to : 'sasha130297@gmail.com',
+			to : 'example@gmail.com',
 			subject : 'Unitoken registration confirmation',
 			html : 'Please click on the link to verify your e-mail.<br><a href='
 			+ link + '>Click here to verify</a>'
