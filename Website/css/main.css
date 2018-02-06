@@ -1,14 +1,46 @@
-.navbar {
-	background-color: rgb(255, 255, 255);
-}
-.navbar-brand {
-	padding-top: 38px;
-	padding-bottom: 38px;
-	color: rgb(27,116,182);
-	font-family: Roboto, sans-serif;
-	font-size: 38px;
+body {
+	font-family: roboto, sans-serif;
 }
 
-#signup {
+.navbar {
+	background-color: rgb(1,49,153);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.navbar-brand {
+	color: rgb(255, 255, 255);
+	font-size: 28px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.navbar-collapse a {
+	color: rgb(255, 255, 255);
+}
+
+.signup {
+	height: 1000px;
+}
+
+.intro {
+	z-index: -1;
+}
+
+.introcontent {
+	padding-top: 138px;
+	padding-bottom: 138px;
+}
+
+#bg {
+	position: fixed;
+	z-index: -1;
+	background: url("img/topography.png");
+	opacity: .4;
 	height: 100%;
+}
+
+#temp {
+	height: 1000px;
+	background-color: rgb(245,245,245);
+	box-shadow: 0 -4px 8px 0 rgba(0, 0, 0, 0.05), 0 -2px 20px 0 rgba(0, 0, 0, 0.19);
 }
