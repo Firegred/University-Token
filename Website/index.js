@@ -40,20 +40,20 @@ module.exports = function(app, dbcon) {
         Description:
         TODO(-s):
     */
-    app.get('/sendconfirmation', function(req, res) {
+    app.post('/sendconfirmation', function(req, res) {
         var confirmationToken = (1 + Math.random()).toString(36).substring(2, 18);
         var databaseQuery = "UPDATE temp_users SET verification_code = '" +
-            confirmationToken + "' WHERE email = " + dbcon.escape("example@gmail.com");
+            confirmationToken + "' WHERE email = " + dbcon.escape(req.body.email);
         dbcon.query(databaseQuery, function(err, result) {
             if (err) {
-                console.log(err);
+                throw err;
             }
             console.log(result.affectedRows + " record(s) updated");
         });
         var link = "http://" + host + "/verify?id=" + confirmationToken;
         var mailOptions = {
             from: 'Do Not Reply <unitokenemailconfirmation@gmail.com>',
-            to: 'example@gmail.com',
+            to: req.body.email,
             subject: 'Unitoken registration confirmation',
             html: 'Please click on the link to verify your e-mail.<br><a href=' +
                 link + '>Click here to verify</a>'
