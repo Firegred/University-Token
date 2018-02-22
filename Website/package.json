@@ -1,9 +1,10 @@
 {
 	"name": "unitoken",
 	"dependencies": {
-		"express": "latest",
+		"ejs": "^2.5.7",
+		"express": "^4.16.2",
 		"mysql": "latest",
-		"nodemailer": "latest",
+		"nodemailer": "^4.6.0",
 		"path": "latest",
 		"promise-mysql": "^3.2.0"
 	}
