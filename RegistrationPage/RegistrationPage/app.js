@@ -14,10 +14,11 @@ var urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 /* Setting up Database Connection */
 var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'mysql10101',
-    database: 'userInfo'
+    host: "unitokendata.cpcqiko7dvv7.us-east-1.rds.amazonaws.com",
+	user: "root",
+	password: "dbaccess",
+	port: "3306",
+	database: "db"
 });
 
 connection.connect();
