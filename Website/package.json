@@ -6,6 +6,5 @@
 		"mysql": "latest",
 		"nodemailer": "latest",
 		"path": "latest"
-		"node": "latest"
 	}
 }
