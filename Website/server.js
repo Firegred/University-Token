@@ -8,9 +8,11 @@ app.set('view engine', 'ejs');
 app.set('views',  path.join(__dirname, "views"));
 
 var dbcon = mysql.createConnection({
-	host: "localhost",
+	host: "unitokendata.cpcqiko7dvv7.us-east-1.rds.amazonaws.com",
 	user: "root",
-	database: "mydb"
+	password: "dbaccess",
+	port: "3306",
+	database: "db"
 });
 
 /* Routing of links */
