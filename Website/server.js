@@ -21,6 +21,14 @@ app.use(express.static(__dirname + '/JS'));
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
+app.get('/',function(req,res){
+res.render('index.html');
+});
+
+app.get('/search',function(req,res){
+
+});
+
 /* Routing of links */
 routes(app, dbcon);
 
