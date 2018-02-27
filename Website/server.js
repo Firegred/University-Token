@@ -15,14 +15,19 @@ var dbcon = mysql.createConnection({
 	database: 'mydb'
 });
 
+dbcon.connect(function(err) {
+	if (err) throw err;
+});
+
+
 /* Routing of links */
 routes(app, dbcon);
 
 /* Temp marketplace */
 market(app, dbcon);
 
+
 /* Application is bound to port 3000 */
 app.listen(3000, function(){
 	console.log('Server is bound to port 3000');
-	console.log(__dirname);
 });
