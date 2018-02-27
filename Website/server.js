@@ -15,6 +15,12 @@ var dbcon = mysql.createConnection({
 	database: "db"
 });
 
+//used for search function
+app.set('views',__dirname + '/views');
+app.use(express.static(__dirname + '/JS'));
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
 /* Routing of links */
 routes(app, dbcon);
 
