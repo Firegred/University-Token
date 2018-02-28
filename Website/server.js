@@ -2,52 +2,30 @@ var express = require('express');
 var routes = require('./index.js');
 var mysql = require('mysql');
 var path = require('path');
-var app = express();
+var session = require('express-session');
+var passport = require('passport');
+var cookieParser = require('cookie-parser');
 
+var app = express();
 app.set('view engine', 'ejs');
-app.set('views',  path.join(__dirname, "views"));
+app.set('views', path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
+app.use(session({secret: ""})); // Please insert random string for secret
+app.use(passport.initialize());
+app.use(passport.session());
 
 var dbcon = mysql.createConnection({
-	host: "unitokendata.cpcqiko7dvv7.us-east-1.rds.amazonaws.com",
-	user: "root",
-	password: "dbaccess",
-	port: "3306",
-	database: "db"
-});
-
-//used for search function
-app.set('views',__dirname + '/views');
-app.use(express.static(__dirname + '/JS'));
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-
-app.get('/',function(req,res){
-res.render('index.html');
-});
-
-app.get('/search',function(req,res){
-
-});
-app.get('/',function(req,res){
-res.render('index.html');
-});
-
-app.get('/search',function(req,res){
-connection.query('SELECT wallet_address from wallet where user_id like "%'+req.query.key+'%"',
-function(err, rows, fields) {
-if (err) throw err;
-var data=[];
-for(i=0;i<rows.length;i++)
-{
-data.push(rows[i].first_name);
-}
-res.end(JSON.stringify(data));
-});
+    host: "localhost",
+    user: "root",
+    database: "mydb",
+    multipleStatements: true
 });
 
 /* Routing of links */
-routes(app, dbcon);
+routes(app, dbcon, passport);
 
-var server=app.listen(3000,function(){
-console.log("We have started our server on port 3000");
+/* Application is bound to port 3000 */
+app.listen(3000, function() {
+    console.log('Server is bound to port 3000')
 });
