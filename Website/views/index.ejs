@@ -3,56 +3,37 @@
 	<head>
 		<!-- Bootstrap CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<!-- Roboto CDN -->
-		<link href="https://fonts.googleapis.com/css?family=Roboto:700i" rel="stylesheet">
+		<!-- Roboto CDN (regular + bold italic)-->
+		<link href="https://fonts.googleapis.com/css?family=Roboto:400,700i" rel="stylesheet">
 
 		<link rel="stylesheet" type="text/css" href="css/main.css">
-		
+		<link rel="icon" href="University-Token/Website/UniToken.png">
+		<title>Welcome to UniToken!</title>
+
 		<style>
 		</style>	
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-light">
-			<div class="container">
-				<a class="navbar-brand" href="#">UniToken</a>
-					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-			  		</button>
-
-			  	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav mr-auto">
-				 		<li class="nav-item active">
-							<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-				  		</li>
-				 		 <li class="nav-item">
-							<a class="nav-link" href="#">Link</a>
-				  		</li>
-				 		<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					  			Dropdown
-							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<a class="dropdown-item" href="#">Action</a>
-								<a class="dropdown-item" href="#">Another action</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Something else here</a>
-							</div>
-				 		</li>
-					</ul>
-				<form class="form-inline my-2 my-lg-0">
-				  	<input method="post" class="form-control mr-sm-2" type="username" placeholder="Username" aria-label="Username">
-				  	<input method="post" class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
-				  	<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
-				</form>
-			</div>
-		  </div>
-		</nav>
+		<div id="bg" class="container-fluid"></div>
+		<% include ../views/test %>
 		<main>
-			<div id="signup">
-				<div class="container">
-
+			<div class="container">
+				<div class="intro">
+					<div class="introcontent">
+						<div class="introwords">
+							<h1 class="text-center">Cryptocurrency for academia</h1>
+							<p class="text-center">Some nice and descriptive words<br>sample text</p>
+						</div>
+						<div class="getstarted">
+							<form class="form-inline justify-content-center">
+								<input method="get" class="form-control mr-sm-2" type="email" placeholder="Enter your .edu email" aria-label="Password">
+								<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Get Started</button>
+							</form>
+						</div>
+					</div>				
 				</div>
 			</div>
+			<div id="temp" class="container-fluid"></div>
 		</main>
 	</body>
 	<!-- Script for BootStrap -->
