@@ -17,12 +17,15 @@ const smtpTransport = nodemailer.createTransport({
 module.exports = function(app, dbcon, passport) {
 
     app.get('/', function(req, res) {
-        res.render('index')
-    })
+        res.render('index');
+    });
 
     registration(app, dbcon, smtpTransport, host);
     loginsessions(app, dbcon, passport);
     userprofile(app, dbcon, smtpTransport, host);
     marketplace(app, dbcon);
 
+    app.use(function(req, res, next){
+        res.status(404).end("Sorry, page not found");
+    });
 };

@@ -1,5 +1,51 @@
 module.exports = function (app, dbcon, smtpTransport, host) {
 
+    app.get("/user/:id", function(req, res) {
+        var id = req.params.id;
+        var databaseQuery = "SELECT * FROM perm_users WHERE user_id =" + id;
+        dbcon.query(databaseQuery, function(err, result) {
+            if(err) {
+                throw err;
+            }
+            console.log(result);
+            // temporary variable
+            var myid = 0;
+            //Checking if user is authenticated
+            if(req.isAuthenticated()) {
+                //Checking if user's profile is personal
+                if(req.user.user_id == id) {
+                    //If true, render use's personal profile page
+                    res.render("myUserPage", {
+                        firstName: result[0].first_name,
+                        lastName: result[0].last_name,
+                        email: result[0].email,
+                        month: result[0].birth_month,
+                        day: result[0].birth_day,
+                        year: result[0].birth_year,
+                        university: result[0].university,
+                        country: result[0].country,
+                        state: result[0].state
+
+                    });
+                }
+            }
+            //Render public version of user page
+            res.render("userPage", {
+                firstName: result[0].first_name,
+                lastName: result[0].last_name,
+                email: result[0].email,
+                month: result[0].birth_month,
+                day: result[0].birth_day,
+                year: result[0].birth_year,
+                university: result[0].university,
+                country: result[0].country,
+                state: result[0].state
+
+            });
+        });
+        console.log("triggere2d");
+    });
+
     app.get('/resetpassword', function (req, res) {
         res.render('resetpassword');
     });
