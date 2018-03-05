@@ -1,10 +1,10 @@
-var express = require('express');
-var routes = require('./index.js');
-var mysql = require('mysql');
-var path = require('path');
-var session = require('express-session');
-var passport = require('passport');
-var cookieParser = require('cookie-parser');
+const express = require('express');
+const mysql = require('mysql');
+const path = require('path');
+const session = require('express-session');
+const passport = require('passport');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -14,6 +14,7 @@ app.use(cookieParser());
 app.use(session({secret: ""})); // Please insert random string for secret
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.urlencoded({extended: true}));
 
 var dbcon = mysql.createConnection({
     host: "localhost",
@@ -23,6 +24,7 @@ var dbcon = mysql.createConnection({
 });
 
 /* Routing of links */
+const routes = require('./index.js');
 routes(app, dbcon, passport);
 
 /* Application is bound to port 3000 */

@@ -2,13 +2,11 @@
 <html>
 
 <head>
-    <!-- Bootstrap CDN -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!-- Bootstrap core CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/createlisting.css" rel="stylesheet">
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="http://www.atlasestateagents.co.uk/javascript/tether.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
 
     <meta charset="UTF-8">
     <title>Create a listing</title>
@@ -61,20 +59,14 @@
 
         <br>
 
-        <div class="row">
-            <div class="col-md-12">
-                <label class="btn btn-default">
-                    Upload a picture...<input type="file" id="uploadPhoto" name="uploadPhoto" accept="image/*" onchange="previewFile()" hidden>
-                </label>
-            </div>
-        </div>
-
-        <br>
 
         <div class="row">
             <div class="col-md-12">
                 <input class="btn btn-primary" type="submit">
-                <a class="btn btn-default" href="/">Cancel</a>
+                <label class="btn btn-secondary align-top">
+                    Upload a picture...<input type="file" id="uploadPhoto" name="uploadPhoto" accept="image/*" onchange="previewFile()" hidden>
+                </label>
+                <a class="btn btn-secondary" href="/">Cancel</a>
             </div>
         </div>
 
