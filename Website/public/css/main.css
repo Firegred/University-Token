@@ -10,13 +10,15 @@ body {
 	height: 1000px;
 }
 
-.intro {
-	z-index: -1;
+main {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.introcontent {
-	padding-top: 138px;
-	padding-bottom: 138px;
+.intro {
+	z-index: -1;
 }
 
 #bg {
