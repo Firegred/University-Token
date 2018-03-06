@@ -27,7 +27,7 @@
                     </div>
                 </li>
             </ul>
-            <% if (typeof user == 'object' && user) { %>
+            <% if (typeof user != 'undefined') { %>
             <p class="username">Welcome back, <%= user.first_name %></p>
             <% } else { %>
             <form class="form-inline my-2 my-lg-0" action="/login" method="POST">

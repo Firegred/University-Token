@@ -6,8 +6,8 @@ module.exports = function (app, dbcon, passport) {
         done(null, user.user_id);
     });
 
-    passport.deserializeUser(function (id, done) {
-        dbcon.query("SELECT * FROM perm_users WHERE user_id = ?", [id], function (err, rows) {
+    passport.deserializeUser(function (user_id, done) {
+        dbcon.query("SELECT * FROM perm_users WHERE user_id = ?", [user_id], function (err, rows) {
             done(err, rows[0]);
         });
     });
@@ -28,14 +28,12 @@ module.exports = function (app, dbcon, passport) {
 
                     if (rows[0].password != password) {
                         return done(null, false);
-                    } else {
-                        return done(null, rows[0]);
                     }
+                    return done(null, rows[0]);
                 });
             }));
 
     app.post("/login", passport.authenticate('local-login', {
-            successRedirect: "/",
             failureRedirect: "/login"
         }),
         function (req, res) {
@@ -44,6 +42,7 @@ module.exports = function (app, dbcon, passport) {
             } else {
                 req.session.cookie.expires = false;
             }
+            res.redirect(req.session.returnTo || '/');
         });
 
     function isLoggedIn(req, res, next) {
