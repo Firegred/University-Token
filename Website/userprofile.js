@@ -28,20 +28,25 @@ module.exports = function (app, dbcon, smtpTransport, host) {
 
                     });
                 }
-            }
-            //Render public version of user page
-            res.render("userPage", {
-                firstName: result[0].first_name,
-                lastName: result[0].last_name,
-                email: result[0].email,
-                month: result[0].birth_month,
-                day: result[0].birth_day,
-                year: result[0].birth_year,
-                university: result[0].university,
-                country: result[0].country,
-                state: result[0].state
+            } else {
+                if(result.length) {
+                    //Render public version of user page
+                    res.render("userPage", {
+                        firstName: result[0].first_name,
+                        lastName: result[0].last_name,
+                        email: result[0].email,
+                        month: result[0].birth_month,
+                        day: result[0].birth_day,
+                        year: result[0].birth_year,
+                        university: result[0].university,
+                        country: result[0].country,
+                        state: result[0].state
 
-            });
+                    });
+                } else {
+                    res.end("No user exists");
+                }
+            }
         });
         console.log("triggere2d");
     });
