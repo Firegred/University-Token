@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 
 const registration = require("./registration.js")
 const loginsessions = require("./loginsessions.js");
@@ -6,13 +7,9 @@ const userprofile = require("./userprofile.js");
 const marketplace = require("./marketplace.js");
 
 const host = "test.universitytoken.net";
-const smtpTransport = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'unitokenemailconfirmation@gmail.com',
-        pass: 'hP2-WtP-fCG-E9d'
-    }
-});
+
+const mailConfig = JSON.parse(fs.readFileSync("config/mailing.json"));
+const smtpTransport = nodemailer.createTransport(mailConfig);
 
 module.exports = function(app, dbcon, passport) {
 

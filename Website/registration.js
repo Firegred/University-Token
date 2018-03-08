@@ -1,3 +1,6 @@
+const bcrypt = require('bcrypt-nodejs');
+
+
 module.exports = function (app, dbcon, smtpTransport, host) {
 
     app.get("/register", function (req, res) {
@@ -19,7 +22,7 @@ module.exports = function (app, dbcon, smtpTransport, host) {
             dbcon.escape(req.body.country) + "," +
             dbcon.escape(req.body.state) + "," +
             dbcon.escape(req.body.zip) + "," +
-            dbcon.escape(req.body.password) + ")";
+            dbcon.escape(bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null)) + ")";
 
         dbcon.query(databaseQuery, function (err, result) {
             if (err) {

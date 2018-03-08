@@ -5,6 +5,7 @@ const session = require('express-session');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -16,12 +17,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({extended: true}));
 
-var dbcon = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "mydb",
-    multipleStatements: true
-});
+const dbConfig = JSON.parse(fs.readFileSync("config/database.json"));
+var dbcon = mysql.createConnection(dbConfig);
 
 /* Routing of links */
 const routes = require('./index.js');

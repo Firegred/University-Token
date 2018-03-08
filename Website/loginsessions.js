@@ -1,4 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt-nodejs');
 
 module.exports = function (app, dbcon, passport) {
 
@@ -26,7 +27,7 @@ module.exports = function (app, dbcon, passport) {
                         return done(null, false);
                     }
 
-                    if (rows[0].password != password) {
+                    if (!bcrypt.compareSync(password, rows[0].password)) {
                         return done(null, false);
                     }
                     return done(null, rows[0]);

@@ -9,6 +9,7 @@
 		"express-session": "latest",
 		"passport": "latest",
 		"passport-local": "latest",
-		"cookie-parser": "latest"
+		"cookie-parser": "latest",
+		"bcrypt-nodejs": "latest"
 	}
 }
