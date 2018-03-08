@@ -46,6 +46,10 @@ module.exports = function (app, dbcon, passport) {
             res.redirect(req.session.returnTo || '/');
         });
 
+    app.get("/login", function(req, res){
+       res.render("login");
+    });
+
     function isLoggedIn(req, res, next) {
 
         // if user is authenticated in the session, carry on
