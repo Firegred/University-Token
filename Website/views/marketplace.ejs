@@ -1,0 +1,47 @@
+<!doctype HTML>
+<html>
+<head>
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Roboto CDN (regular + bold italic)-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700i" rel="stylesheet">
+    <!-- Script for BootStrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="/../css/marketplace.css">
+    <link rel="icon" href="../img/UniToken.png">
+    <style>
+    </style>
+</head>
+<body>
+<% include nav.ejs%>
+<main class="row">
+    <div id="sidebar" class="col-2">
+        <div id="searchwrapper" class="container">
+        </div>
+    </div>
+    <div class="col-10">
+        <div id="listingwrapper" class="container-fluid">
+            <% for(let i = 0; i < listings.length; i++) { %>
+            <div class="listing">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="listinginfo"><%= listings[i].info %></h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-9">
+                        <p class="listingbio"><%= listings[i].bio %></p>
+                    </div>
+                    <div class="col-3">
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</main>
+</body>
+</html>

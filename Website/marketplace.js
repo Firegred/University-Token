@@ -16,6 +16,14 @@ const upload = multer({
 
 module.exports = function (app, dbcon) {
 
+     app.get('/market', function(req, res) {
+        dbcon.query("SELECT * FROM listings", function(err, result, fields) {
+            if (err) throw err;
+            console.log(result);
+            res.render('marketplace', { listings: result });
+        });
+    })
+
     app.get("/market/post", function(req, res) {
         if(!req.isAuthenticated()){
             res.redirect("/login");
