@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/createlisting.css" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <title>Create a listing</title>
+</head>
+<body class="bg-light">
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th scope="row">Name:</th>
+                <td><%= listing.name%></td>
+            </tr>
+            <tr>
+                <th scope="row">Price:</th>
+                <td><%= listing.price%></td>
+            </tr>
+            <tr>
+                <th scope="row">Category:</th>
+                <td><%= listing.category%></td>
+            </tr>
+            <tr>
+                <th scope="row">Description:</th>
+                <td><%= listing.bio%></td>
+            </tr>
+            <tr>
+                <th scope="row">Additional info:</th>
+                <td><%= listing.info%></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" href="/market/buy?id=<%= listing.id%>">Purchase</a>
+
+</body>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script src="http://www.atlasestateagents.co.uk/javascript/tether.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+</html>
