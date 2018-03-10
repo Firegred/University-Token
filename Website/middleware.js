@@ -1,10 +1,13 @@
 module.exports = {
+
     isLoggedIn: function (req, res, next) {
-
-        // if user is authenticated in the session, carry on
-        if (req.isAuthenticated())
+        if (req.isAuthenticated()) {
             return next();
+        } else {
+            req.session.returnTo = (req.originalUrl) ? req.originalUrl : "/";
+            res.redirect('/login');
+        }
 
-        res.redirect('/login');
     }
+
 }

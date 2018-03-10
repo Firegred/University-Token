@@ -43,7 +43,9 @@ module.exports = function (app, dbcon, passport) {
             } else {
                 req.session.cookie.expires = false;
             }
-            res.redirect(req.session.returnTo || '/');
+            var returnTo = (req.session.returnTo) ? req.session.returnTo : "/";
+            delete req.session.returnTo;
+            res.redirect(returnTo);
         });
 
     app.get("/login", function (req, res) {
