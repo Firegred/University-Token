@@ -1,0 +1,45 @@
+body {
+	font-family: roboto, sans-serif;
+}
+
+.navbar {
+	background-color: #213F61;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.navbar-brand {
+	color: rgb(255, 255, 255);
+	font-size: 28px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.navbar-collapse a {
+	color: rgb(255, 255, 255);
+}
+
+.navbar-collapse .dropdown-item {
+	color: rgb(0, 0, 0);
+}
+
+.btn-outline-success{
+	color:white;
+	background-color:#213F61;
+	background-image:#213F61;
+	border-color:white;
+}
+
+.btn-outline-success:hover{
+	color:white;
+	background-color:#213F61;
+	border-color:#213F61;
+}
+
+#name {
+	text-align: right;
+}
+
+#name li {
+	display: inline-block;
+	float: none;
+}
