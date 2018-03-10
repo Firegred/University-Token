@@ -1,0 +1,80 @@
+<!doctype HTML>
+<html>
+	<head>
+		<!-- Bootstrap CDN -->
+		<link href="../css/bootstrap.min1.css" rel="stylesheet">
+		<!-- Roboto CDN (regular + bold italic)-->
+		<link href="https://fonts.googleapis.com/css?family=Roboto:400,700i" rel="stylesheet">
+
+		<link rel="stylesheet" type="text/css" href="../css/main.css">
+		<link rel="icon" href="University-Token/Website/UniToken.png">
+		<title>Welcome to UniToken!</title>
+		<script>
+		function submit() {
+			console.log("test");
+			var host = "http://test.universitytoken.net";
+			var field = document.getElementById("regRedirect");
+			var form = document.getElementById("redirectForm");
+			form.addEventListener("submit", function(event){
+				event.preventDefault();
+				if (field.value.indexOf(".edu") <= 0){
+					alert("Put a .edu email");
+				} else {
+					console.log(1);
+					window.location.replace("/register?email=" + field.value);
+				}
+			});
+		}
+		</script>
+		<style>
+		</style>	
+	</head>
+	<body>
+		<div id="bg" class="container-fluid"></div>
+        <% include nav.ejs%>
+
+		<!--flash message-->
+        <% if (locals.messages) { %>
+        	<% if (messages.warning) { %>
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<%= messages.warning %>
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			<% } else { %>
+				<div class="alert alert-success alert-dismissible fade show" role="alert">
+					<%= messages.success %>
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+        	<% } %>
+        <% } %>
+
+		<main>
+			<div class="container">
+				<div class="intro">
+					<div class="introcontent">
+						<div class="introwords">
+							<h1 class="text-center">Cryptocurrency for academia</h1>
+							<p class="text-center">Some nice and descriptive words<br>sample text</p>
+						</div>
+						<div class="getstarted" id="redirectForm">
+							<form class="form-inline justify-content-center">
+								<input class="form-control mr-sm-2" type="email" id="regRedirect" placeholder="Enter your .edu email" aria-label="Password">
+								<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Get Started</button>
+							</form>
+						</div>
+					</div>				
+				</div>
+			</div>
+			<script>submit();</script>
+			<div id="temp" class="container-fluid"></div>
+		</main>
+	</body>
+	<!-- Script for BootStrap -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</html>
