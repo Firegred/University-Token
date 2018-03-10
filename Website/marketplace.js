@@ -13,6 +13,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage
 });
+const isLoggedIn = require("./middleware.js").isLoggedIn;
 
 module.exports = function (app, dbcon) {
 
@@ -23,12 +24,8 @@ module.exports = function (app, dbcon) {
         });
     })
 
-    app.get("/market/post", function (req, res) {
-        if (!req.isAuthenticated()) {
-            res.redirect("/login");
-        } else {
-            res.render("createListing", {user: req.user});
-        }
+    app.get("/market/post", isLoggedIn, function (req, res) {
+        res.render("createListing", {user: req.user});
     });
 
     app.post("/market/post", upload.single("uploadPhoto"), function (req, res) {
@@ -56,37 +53,32 @@ module.exports = function (app, dbcon) {
         });
     });
 
-    app.get("/market/buy", function (req, res) {
-        if (!req.isAuthenticated()) {
-            res.redirect("/login");
-        } else {
-            var listingId = req.query.id;
-            dbcon.query("SELECT * FROM listings where id = ?", [listingId], function (err, result) {
-                if (!result.length) {
-                    res.end("No such listing");
-                } else {
-                    if(req.user.user_id != result[0].user_id) {
-                        if (hasEnoughFunds()) {
-                            if (performTransaction()) {
-                                dbcon.query("DELETE FROM listings WHERE id = ?", [listingId], function (err, rows) {
-                                    if (err) {
-                                        throw err;
-                                    }
-                                    addListingToCompleted(result[0], dbcon, req.user.user_id);
-                                    notifySeller();
-                                    res.end("Transaction was successful");
-                                });
-                            } else {
-                                res.end("There was an error with your transaction. Please, retry later.")
-                            }
+    app.get("/market/buy", isLoggedIn, function (req, res) {
+        var listingId = req.query.id;
+        dbcon.query("SELECT * FROM listings where id = ?", [listingId], function (err, result) {
+            if (!result.length) {
+                res.end("No such listing");
+            } else {
+                if (req.user.user_id != result[0].user_id) {
+                    if (hasEnoughFunds()) {
+                        if (performTransaction()) {
+                            dbcon.query("DELETE FROM listings WHERE id = ?", [listingId], function (err, rows) {
+                                if (err) {
+                                    throw err;
+                                }
+                                addListingToCompleted(result[0], dbcon, req.user.user_id);
+                                notifySeller();
+                                res.end("Transaction was successful");
+                            });
+                        } else {
+                            res.end("There was an error with your transaction. Please, retry later.")
                         }
-                    } else {
-                        res.end("You can't buy your own listings");
                     }
+                } else {
+                    res.end("You can't buy your own listings");
                 }
-            });
-        }
-
+            }
+        });
     });
 
     function hasEnoughFunds() {
