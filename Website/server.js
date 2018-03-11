@@ -12,7 +12,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
-app.use(session({secret: ""})); // Please insert random string for secret
+app.use(session({secret: "1"})); // Please insert random string for secret
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({extended: true}));
