@@ -3,7 +3,7 @@ body {
 }
 
 .navbar {
-	background-color: rgb(1,49,153);
+	background-color: #213F61;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -14,16 +14,32 @@ body {
 	font-style: italic;
 }
 
-.navbar-brand:hover {
+.navbar-welcome {
+	color: rgb(255, 255, 255);
+	font-size: 15px;
+	font-weight: bold;
+	margin: 0 auto;
+}
+
+.navbar-collapse a {
 	color: rgb(255, 255, 255);
 }
 
-button.navbar-toggler {
-	color: rgb(255, 255, 255);
+.navbar-collapse .dropdown-item {
+	color: rgb(0, 0, 0);
 }
 
-.nav-link {
-	color: rgb(255, 255, 255);
+.btn-outline-success{
+	color:white;
+	background-color:#213F61;
+	background-image:#213F61;
+	border-color:white;
+}
+
+.btn-outline-success:hover{
+	color:white;
+	background-color:#213F61;
+	border-color:#213F61;
 }
 
 #name {

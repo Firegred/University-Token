@@ -1,9 +1,12 @@
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/nav.css">
+
 <div class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="/">UniToken</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <div id="menu-glyph">&#9776;</div>
+            <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -28,7 +31,9 @@
                 </li>
             </ul>
             <% if (typeof user != 'undefined') { %>
-            <p class="username">Welcome back, <%= user.first_name %></p>
+            <ul class="nav navbar-nav navbar-right">
+                <p class="navbar-welcome">Welcome back, <%= user.first_name%></p>
+            </ul>
             <% } else { %>
             <form class="form-inline my-2 my-lg-0" action="/login" method="POST">
                 <input method="post" class="form-control mr-sm-2" name="email" type="email" placeholder="Email"
@@ -41,4 +46,3 @@
         </div>
     </div>
 </div>
-<link rel="stylesheet" type="text/css" href="../css/nav.css">
