@@ -129,12 +129,97 @@
 				<div class="tab-pane" id="3a" role="tabpanel">
 					<div id="wallet">
 						<div class="row align-items-center justify-content-center">
-							<h3>Nothing here yet</h3>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th scope = "col"></th>
+										<th scope=  "col"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="row">Ethereum Balance:</th>
+										<td id = "eth">Balance</td>
+									</tr>
+									<tr>
+										<th scope="row">UniToken Balance: </th>
+										<td id = "unit">Tokens</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="grid">
+								<div class="row align-items-center justify-content-center">
+									<h3 id="cost"></h3>
+								</div>
+								<div class="row align-items-center justify-content-center">
+									<div class="input-group">
+  										<span class="input-group-addon">Enter Amount</span>
+  										<input type="text" id ="buy" class="form-control" aria-label="ETH amount">
+  										<span class="input-group-addon">ETH</span>
+									</div>
+									<button class="btn btn-large btn-info" id="buy" onClick="buyToken();">Buy UniToken</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<script>
+	//abi for contract functions
+	 var abi = 
+[{"constant":false,"inputs":[{"name":"newSellPrice","type":"uint256"},{"name":"newBuyPrice","type":"uint256"}],"name":"setPrices","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"burn","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"sellPrice","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"mintedAmount","type":"uint256"}],"name":"mintToken","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"tokensIssued","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"buyPrice","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"buyCounter","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"buy","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"frozenAccount","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"weiCounter","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"},{"name":"_extraData","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"freeze","type":"bool"}],"name":"freezeAccount","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"target","type":"address"},{"indexed":false,"name":"frozen","type":"bool"}],"name":"FrozenFunds","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Burn","type":"event"}];
+
+//Checks if user has MetaMask
+if(typeof web3 !== 'undefined') {
+    web3 = new Web3(window.web3.currentProvider);
+    console.log("works");
+}
+//If No MetaMask, use other provider
+else {
+    web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/9gdpi5KIUTmyFFZjNk9L'));
+    console.log("MetaMask is null");
+}
+		//Getting Contracted details
+        var contract = web3.eth.contract(abi);
+        contractinstance = contract.at('0x6aCD187F04B7fBEBA31e0A534D30e918D9144638');
+        console.log(contractinstance);
+        //Calling variables from smart contract asynchronously
+        
+        contractinstance.buyPrice(function(error, result) {
+                    var _buyPrice = result.c[0];
+                    document.getElementById("cost").innerHTML = "1 ETH = " + _buyPrice + " UNITs";
+          });
+          var account = web3.eth.accounts[0];
+          var accountInterval = setInterval(function() {
+          	if (web3.eth.accounts[0] !== account) {
+    			account = web3.eth.accounts[0];
+    		}
+    		web3.eth.getBalance(account, function(err, balance) {
+    			document.getElementById("eth").innerHTML = web3.fromWei(balance.toNumber(), "ether") + " ETH";
+    		});
+    		contractinstance.balanceOf(account, function(err, balance) {
+    			document.getElementById("unit").innerHTML = (balance.toNumber() / 1000000000000000000) + " UNIT";
+    		});
+    	  }, 100);
+
+           function buyToken() {
+          		var amount = document.getElementById("buy").value;
+          		console.log(amount);
+          		console.log(contractinstance);
+     			var num = parseFloat(amount).toFixed(18);
+     			console.log(num);
+    	  		if(!isNaN(amount)) {
+    	  			total = 1000000000000000000 * num;
+    	  			console.log(total);
+					contractinstance.buy({from: web3.eth.accounts[0], gas: 3000000, value: total}, function(err, res){
+						if (err.message.indexOf("User denied") != -1) {
+                       		console.log("You rejected the transaction on Metamask!");
+                		 } 
+					});
+    	  		} 
+           }
+	</script>
 </body>
 </html>
