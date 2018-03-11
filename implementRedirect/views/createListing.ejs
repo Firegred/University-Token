@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/createlisting.css" rel="stylesheet">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="http://www.atlasestateagents.co.uk/javascript/tether.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+    <meta charset="UTF-8">
+    <title>Create a listing</title>
+</head>
+
+<body class="bg-light">
+<% include nav.ejs%>
+<% include flash.ejs%>
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2>Create Listing</h2>
+    </div>
+
+    <form enctype="multipart/form-data" action="/market/post" method="POST">
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="listingName">Listing name</label>
+                <input id="listingName" name="listingName" type="text" class="form-control"
+                       placeholder="E.g. mountain bike, iClicker 2, etc." required>
+            </div>
+            <div class="col-md-2">
+                <label for="listingCategory">Category</label>
+                <select id="listingCategory" name="listingCategory" class="custom-select" required>
+                    <option></option>
+                    <option>Home</option>
+                    <option>Entertainment</option>
+                    <option>School</option>
+                    <option>Electronics</option>
+                    <option>Clothing & Accessories</option>
+                    <option>Hobbies</option>
+                    <option>Services</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="listingPrice">Price</label>
+                <input type="number" id="listingPrice" name="listingPrice" class="form-control currency" min="0"
+                       step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" placeholder="123.45" required>
+            </div>
+            <div class="col-md-2">
+                <img class="img-responsive" id="preview" hidden>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-5">
+                <label for="listingBio">Short description</label>
+                <textarea class="form-control" id="listingBio" name="listingBio" rows="5" required></textarea>
+            </div>
+            <div class="col-md-5">
+                <label for="listingInfo">Additional info</label>
+                <small>( Optional )</small>
+                <textarea class="form-control" id="listingInfo" name="listingInfo" rows="5"></textarea>
+            </div>
+        </div>
+
+        <br>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <input class="btn btn-primary" type="submit">
+                <label class="btn btn-secondary align-top">
+                    Upload a picture...<input type="file" id="uploadPhoto" name="uploadPhoto" accept="image/*" onchange="previewFile()" hidden>
+                </label>
+                <a class="btn btn-secondary" href="/">Cancel</a>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+</body>
+<script src="../js/bootstrap.min.js"></script>
+<script>
+    const PRECISION = 2;
+    // Function which restricts field's input to a number with 0 to PRECISION digits precision
+    document.getElementById("listingPrice").addEventListener("keypress", function (evt) {
+        var priceValue = document.getElementById("listingPrice").value;
+        var containsDot = priceValue.indexOf(".") > -1;
+        var isDot = (evt.which == 46);
+        var isDigit = (evt.which >= 48) && (evt.which <= 57);
+        var canInsertDigit = (containsDot) ? (priceValue.length - priceValue.indexOf(".")) <= PRECISION : true;
+        if (!((isDot && !containsDot) || (isDigit && canInsertDigit))) {
+            evt.preventDefault();
+        }
+    });
+    // Function which 1) deletes extra zeros in the front of the number
+    // and 2) reformats the number to be of PRECISION digits precision
+    document.getElementById("listingPrice").onblur = function () {
+        var priceValue = document.getElementById("listingPrice").value;
+        var containsDot = priceValue.indexOf(".") > -1;
+        if (containsDot) {
+            var digitsToFill = PRECISION - (priceValue.length - priceValue.indexOf(".")) + 1;
+            for (i = 0; i < digitsToFill; i++) {
+                priceValue += "0";
+            }
+        } else {
+            priceValue += ".";
+            for (i = 0; i < PRECISION; i++) {
+                priceValue += "0";
+            }
+        }
+        var needsZeroDeleted = priceValue.charAt(0) == "0" && priceValue.charAt(1) != ".";
+        while (needsZeroDeleted) {
+            priceValue = priceValue.substring(1, priceValue.length);
+            needsZeroDeleted = priceValue.charAt(0) == "0" && priceValue.charAt(1) != ".";
+        }
+        priceValue = priceValue == ".00" ? "0.00" : priceValue;
+        document.getElementById("listingPrice").value = priceValue;
+    }
+</script>
+<script>
+    function previewFile(){
+        var preview = document.getElementById("preview");
+        var file    = document.querySelector('input[type=file]').files[0];
+        var reader  = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file); //reads the data as a URL
+            preview.hidden = false;
+        } else {
+            preview.src = "";
+            preview.hidden = true;
+        }
+    }
+</script>
+</html>

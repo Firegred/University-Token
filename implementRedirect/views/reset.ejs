@@ -1,0 +1,42 @@
+<!doctype HTML>
+<html>
+
+<head>
+</head>
+
+<body>
+<% include nav.ejs%>
+
+    <div>
+        <form method="POST">
+            <label for="password">Password :
+				<input name="password" id="password" type="password" onkeyup='check();'/>
+			</label>
+            <br>
+            <label for="confirm_password">Confirm password:
+				<input type="password" name="confirm_password" id="confirm_password" onkeyup='check();'/>
+			</label>
+            <br>
+            <input type="submit" value="Submit" id="button" disabled>
+        </form>
+    </div>
+    <p id="match" style="color:Red;" hidden> Passwords must match</p>
+    <script>
+        var fst_pass = document.getElementById('password');
+        var snd_pass = document.getElementById('confirm_password');
+        var match = document.getElementById('match');
+        var button = document.getElementById("button");
+
+        var check = function() {
+            if (fst_pass.value == snd_pass.value) {
+                match.hidden = true;
+                button.disabled = false;
+            } else {
+                match.hidden = false;
+                button.disabled = true;
+            }
+        }
+    </script>
+</body>
+
+</html>
