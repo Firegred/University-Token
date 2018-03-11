@@ -29,7 +29,7 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                 res.render('error');
             } else {
                 console.log(result.affectedRows + "records updated.");
-                sendEmailConfirmation(req.body.email, res);
+                sendEmailConfirmation(req.body.email, req, res);
             }
         });
     });
@@ -41,7 +41,7 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                 return next();
             } else {
                 req.flash('warning', 'This email is already in use.');
-                res.redirect('/register');
+                res.redirect('/');
             }
         });
     }
@@ -86,7 +86,7 @@ module.exports = function (app, dbcon, smtpTransport, host) {
         }
     });
 
-    function sendEmailConfirmation(email, res) {
+    function sendEmailConfirmation(email, req, res) {
         var confirmationToken = (1 + Math.random()).toString(36).substring(2, 18);
         var databaseQuery = "UPDATE temp_users SET verification_code = " +
             dbcon.escape(confirmationToken) + " WHERE email = " + dbcon.escape(email);
