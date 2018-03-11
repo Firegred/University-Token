@@ -1,4 +1,3 @@
-// Imports
 const crypto = require("crypto");
 const path = require('path');
 const multer = require('multer');
@@ -18,87 +17,88 @@ const isLoggedIn = require("./middleware.js").isLoggedIn;
 
 module.exports = function (app, dbcon) {
 
-    /*
-    Market router
-    Fetches listings from the database and displays them
-     */
     app.get('/market', function (req, res) {
         dbcon.query("SELECT * FROM listings", function (err, result, fields) {
-            if (err){
-                res.render('error');
-            } else {
-                res.render('marketplace', {listings: result, user: req.user});
-            }
+            if (err) throw err;
+            res.render('marketplace', {listings: result, user: req.user});
         });
     })
 
-    // Market create listing router
     app.get("/market/post", isLoggedIn, function (req, res) {
         res.render("createListing", {user: req.user});
     });
 
-    /*
-    Market create listing submit router
-    Stores user provided information for a new listing in the database
-     */
     app.post("/market/post", upload.single("uploadPhoto"), function (req, res) {
-        var picture = (typeof req.file == "undefined") ? "" : req.file.path; // If no picture is uploaded, picture path is empty
+        var picture = (typeof req.file == "undefined") ? "" : req.file.path;
+
+        var walletQuery = "UPDATE perm_users SET wallet=? WHERE user_id=?";
+        console.log(req.user.user_id);
+        dbcon.query(walletQuery, [req.body.wallet, req.user.user_id], function(err, result) {
+            console.log("Wallet " + req.body.wallet + " has been added to database");
+        });
+        dbcon.commit();
         var databaseQuery = "INSERT INTO listings (user_id, name, price, category, bio, info, picture) VALUES " +
             "(?, ?, ?, ?, ?, ?, ?)";
         dbcon.query(databaseQuery, [req.user.user_id, req.body.listingName, req.body.listingPrice,
                 req.body.listingCategory, req.body.listingBio, req.body.listingInfo, picture],
             function (err, result) {
-                if (err){
-                    res.render("error");
-                } else {
-                    req.flash('success', 'Listing has been successfully created.');
-                    res.redirect('/market');
-                }
+                res.end("Listing was created successfully");
             });
     });
 
     app.get("/market/view/:id", function (req, res) {
         var listingId = req.params.id;
+        var wallet = 'nothing';
+
         dbcon.query("SELECT * FROM listings WHERE id = ?", [listingId], function (err, rows) {
             if (err) {
-                res.render('error');
+                throw err;
             }
             if (!rows.length) {
-                req.flash('warning', 'No listing found with that ID.');
-                res.redirect('/market');
+                res.end("No listing with such id");
             } else {
-                res.render("viewListing", {listing: rows[0]});
+                 var list = rows[0];
+                 var wallet = 0;
+                 console.log(rows[0].user_id);
+                 dbcon.query("SELECT * FROM perm_users WHERE user_id = ?", [rows[0].user_id], function (err, result) {
+                     if(err) {
+                        throw err;
+                     }
+                    else {
+                    wallet = result[0].wallet.toString();
+                    console.log(wallet);
+                    res.render("viewListing", {listing: list, wallet: wallet});
+                 }
+              });
+            console.log(wallet);
             }
         });
     });
 
-    app.get("/market/buy", isLoggedIn, function (req, res) {
+    app.post("/market/buy", isLoggedIn, function (req, res) {
         var listingId = req.query.id;
+		console.log(req.body.flag);
         dbcon.query("SELECT * FROM listings where id = ?", [listingId], function (err, result) {
             if (!result.length) {
-                req.flash('warning', 'No listing found with that ID.');
-                res.redirect('/market');
+                res.end("No such listing");
             } else {
                 if (req.user.user_id != result[0].user_id) {
                     if (hasEnoughFunds()) {
-                        if (performTransaction()) {
+                        if (performTransaction(req.body.flag)) {
                             dbcon.query("DELETE FROM listings WHERE id = ?", [listingId], function (err, rows) {
                                 if (err) {
-                                    res.render('error');
+                                    throw err;
                                 }
                                 addListingToCompleted(result[0], dbcon, req.user.user_id);
                                 notifySeller();
-                                req.flash('success', 'Transaction successful.');
-                                res.redirect('/market');
+                                res.end("Transaction was successful");
                             });
                         } else {
-                            req.flash('warning', 'There was an error with your transaction. Please, retry later.');
-                            res.redirect('/market');
+                            res.end("There was an error with your transaction. Please, retry later.")
                         }
                     }
                 } else {
-                    req.flash('warning', 'You cannot buy your own listings.');
-                    res.redirect('/market');
+                    res.end("You can't buy your own listings");
                 }
             }
         });
@@ -108,8 +108,9 @@ module.exports = function (app, dbcon) {
         return true;
     }
 
-    function performTransaction() {
-        return true;
+    function performTransaction(flag) {
+        if(flag == "true") return true;
+        else return false;
     }
 
     function addListingToCompleted(listing, dbcon, buyerId) {
