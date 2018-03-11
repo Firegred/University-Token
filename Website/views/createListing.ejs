@@ -12,21 +12,23 @@
     <title>Create a listing</title>
 </head>
 
-<body class="bg-light">
 <% include nav.ejs %>
+
+<body class="bg-light">
 <div class="container">
 
     <div class="py-5 text-center">
         <h2>Create Listing</h2>
     </div>
 
-    <form enctype="multipart/form-data" action="/market/post" method="POST">
+    <form enctype="multipart/form-data" action="/market/post" method="POST" id="listing_form">
 
         <div class="row">
             <div class="col-md-4">
                 <label for="listingName">Listing name</label>
                 <input id="listingName" name="listingName" type="text" class="form-control"
                        placeholder="E.g. mountain bike, iClicker 2, etc." required>
+                <div class="invalid-feedback">Name should be 2 to 20 characters</div>
             </div>
             <div class="col-md-2">
                 <label for="listingCategory">Category</label>
@@ -43,11 +45,12 @@
             </div>
             <div class="col-md-2">
                 <label for="listingPrice">Price</label>
-                <input type="number" id="listingPrice" name="listingPrice" class="form-control currency" min="0"
-                       step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" placeholder="123.45" required>
+                <input type="number" id="listingPrice" name="listingPrice" class="form-control currency"
+                       placeholder="123.45" required>
+                <div class="invalid-feedback">Price should be more than 0</div>
             </div>
             <div class="col-md-2">
-                <img class="img-responsive" id="preview" hidden>
+                <img class="img-fluid" id="preview" hidden>
             </div>
         </div>
 
@@ -56,14 +59,21 @@
         <div class="row">
             <div class="col-md-5">
                 <label for="listingBio">Short description</label>
-                <textarea class="form-control" id="listingBio" name="listingBio" rows="5" required></textarea>
+                <textarea class="form-control" id="listingBio" name="listingBio" rows="5" style="resize:none"
+                          required></textarea>
+                <div class="invalid-feedback">Description should not exceed 200 characters</div>
             </div>
             <div class="col-md-5">
                 <label for="listingInfo">Additional info</label>
                 <small>( Optional )</small>
-                <textarea class="form-control" id="listingInfo" name="listingInfo" rows="5"></textarea>
+                <textarea class="form-control" id="listingInfo" name="listingInfo" rows="5"
+                          style="resize:none"></textarea>
+                <div class="invalid-feedback">Info should not exceed 200 characters</div>
             </div>
         </div>
+
+        <br>
+
 
         <br>
 
@@ -75,7 +85,7 @@
                     Upload a picture...<input type="file" id="uploadPhoto" name="uploadPhoto" accept="image/*"
                                               onchange="previewFile()" hidden>
                 </label>
-                <a class="btn btn-secondary" href="/">Cancel</a>
+                <a class="btn btn-secondary" href="/market">Cancel</a>
             </div>
         </div>
 
@@ -85,7 +95,7 @@
 </body>
 <script src="../js/bootstrap.min.js"></script>
 <script>
-    const PRECISION = 2;
+    const PRECISION = 8;
     // Function which restricts field's input to a number with 0 to PRECISION digits precision
     document.getElementById("listingPrice").addEventListener("keypress", function (evt) {
         var priceValue = document.getElementById("listingPrice").value;
@@ -118,7 +128,7 @@
             priceValue = priceValue.substring(1, priceValue.length);
             needsZeroDeleted = priceValue.charAt(0) == "0" && priceValue.charAt(1) != ".";
         }
-        priceValue = priceValue == ".00" ? "0.00" : priceValue;
+        priceValue = priceValue == ".00" ? "0" : priceValue;
         document.getElementById("listingPrice").value = priceValue;
     }
 </script>
@@ -137,6 +147,46 @@
             preview.src = "";
             preview.hidden = true;
         }
+    }
+</script>
+<script>
+    form = document.getElementById("listing_form");
+    form.onsubmit = function () {
+        var all_fields_completed = true;
+
+        var name = document.getElementById("listingName");
+        if (name.value.length < 2 || name.value.length > 20) {
+            name.classList.add("is-invalid");
+            all_fields_completed = false;
+        } else {
+            name.classList.remove("is-invalid");
+        }
+
+        var price = document.getElementById("listingPrice");
+        if (price.value == 0.0) {
+            price.classList.add("is-invalid");
+            all_fields_completed = false;
+        } else {
+            price.classList.remove("is-invalid");
+        }
+
+        var bio = document.getElementById("listingBio");
+        if (bio.value.length > 200) {
+            bio.classList.add("is-invalid");
+            all_fields_completed = false;
+        } else {
+            bio.classList.remove("is-invalid");
+        }
+
+        var info = document.getElementById("listingInfo");
+        if (info.value.length > 200) {
+            info.classList.add("is-invalid");
+            all_fields_completed = false;
+        } else {
+            info.classList.remove("is-invalid");
+        }
+
+        return all_fields_completed;
     }
 </script>
 </html>
