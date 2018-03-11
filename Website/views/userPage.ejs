@@ -3,118 +3,85 @@
 <!doctype HTML>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="../css/nav.css">
-<link rel="stylesheet" type="text/css" href="../css/userpage.css">
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../css/userpage.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-<div class="navbar navbar-expand-lg">
-	<div class="container">
-		<a class="navbar-brand" href="index.html">UniToken</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-	  		</button>
-
-	  	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul id ="myTab" class="navbar-nav mr-auto">
-		 		<li class="nav-item active">
-					<a class="nav-link" href="marketplace.html">Marketplace <span class="sr-only">(current)</span></a>
-		  		</li>
-		 		 <li class="nav-item">
-					<a class="nav-link" href="#">Profile</a>
-		  		</li>
-		 		<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  			Dropdown
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#">Another action</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Something else here</a>
-					</div>
-		 		</li>
-			</ul>
-		<form class="form-inline my-2 my-lg-0">
-		  	<input method="post" class="form-control mr-sm-2" type="email" placeholder="Email" aria-label="Username">
-		  	<input method="post" class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
-		  	<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
-		</form>
-	</div>
-  </div>
+<% include nav.ejs %>
+<div class="container">
+    <div id="profile">
+        <div class="row align-items-center justify-content-center">
+            <div class="profile-picture">
+                <img src="/css/img/profile.jpeg" class="rounded-circle border" width="300" height="300">
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-center">
+            <div class="user-type">
+                <span class="badge badge-primary">User</span>
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-center">
+            <div class="space">
+                <ul id="myTab" class="nav nav-pills" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#1a" data-toggle="pill">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="1a" role="tabpanel">
+                <div class="profile-info">
+                    <div class="row align-items-center justify-content-center">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">First Name:</th>
+                                <td><%= firstName %></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Last Name:</th>
+                                <td><%= lastName %></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">University:</th>
+                                <td><%= university %></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Country:</th>
+                                <td><%= country %></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="2a" role="tabpanel">
+                <div id="notifications">
+                    <div class="row align-items-center justify-content-center">
+                        <h3>No new Notifications</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="3a" role="tabpanel">
+                <div id="wallet">
+                    <div class="row align-items-center justify-content-center">
+                        <h3>Nothing here yet</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-	<div class="container">
-		<div id="profile">	
-			<div class="row align-items-center justify-content-center">
-				<div class="profile-picture">
-					<img src="/css/img/profile.jpeg" class="rounded-circle border" width="300" height="300">
-				</div>
-			</div>
-			<div class="row align-items-center justify-content-center">
-				<div class="user-type">
-					<span class="badge badge-primary">User</span>
-				</div>
-			</div>
-			<div class="row align-items-center justify-content-center">
-				<div class="space">
-				<ul id = "myTab" class="nav nav-pills" role="tablist">
-					<li class="nav-item">
-						<a class="nav-link active" href="#1a" data-toggle="pill">Profile</a>
-					</li>
-				</ul>
-				</div>
-			</div>
-			<div class = "tab-content">
-				<div class="tab-pane active" id="1a" role="tabpanel">
-					<div class="profile-info">	
-						<div class="row align-items-center justify-content-center">
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th scope = "col"></th>
-										<th scope=  "col"></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th scope="row">First Name:</th>
-										<td><%= firstName %></td>
-									</tr>
-									<tr>
-										<th scope="row">Last Name: </th>
-										<td><%= lastName %></td>
-									</tr>
-									<tr>
-										<th scope="row">University: </th>
-										<td><%= university %></td>
-									</tr>
-									<tr>
-										<th scope="row">Country: </th>
-										<td><%= country %></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="tab-pane" id="2a" role="tabpanel">
-					<div id="notifications">
-						<div class="row align-items-center justify-content-center">
-							<h3>No new Notifications</h3>
-						</div>
-					</div>
-				</div>
-				<div class="tab-pane" id="3a" role="tabpanel">
-					<div id="wallet">
-						<div class="row align-items-center justify-content-center">
-							<h3>Nothing here yet</h3>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </body>
 </html>

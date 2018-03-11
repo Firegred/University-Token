@@ -1,3 +1,4 @@
+// Imports
 const crypto = require("crypto");
 const path = require('path');
 const multer = require('multer');
@@ -17,25 +18,42 @@ const isLoggedIn = require("./middleware.js").isLoggedIn;
 
 module.exports = function (app, dbcon) {
 
+    /*
+    Market router
+    Fetches listings from the database and displays them
+     */
     app.get('/market', function (req, res) {
         dbcon.query("SELECT * FROM listings", function (err, result, fields) {
-            if (err) throw err;
-            res.render('marketplace', {listings: result, user: req.user});
+            if (err){
+                res.render('error');
+            } else {
+                res.render('marketplace', {listings: result, user: req.user});
+            }
         });
     })
 
+    // Market create listing router
     app.get("/market/post", isLoggedIn, function (req, res) {
         res.render("createListing", {user: req.user});
     });
 
+    /*
+    Market create listing submit router
+    Stores user provided information for a new listing in the database
+     */
     app.post("/market/post", upload.single("uploadPhoto"), function (req, res) {
-        var picture = (typeof req.file == "undefined") ? "" : req.file.path;
+        var picture = (typeof req.file == "undefined") ? "" : req.file.path; // If no picture is uploaded, picture path is empty
         var databaseQuery = "INSERT INTO listings (user_id, name, price, category, bio, info, picture) VALUES " +
             "(?, ?, ?, ?, ?, ?, ?)";
         dbcon.query(databaseQuery, [req.user.user_id, req.body.listingName, req.body.listingPrice,
                 req.body.listingCategory, req.body.listingBio, req.body.listingInfo, picture],
             function (err, result) {
-                res.end("Listing was created successfully");
+                if (err){
+                    res.render("error");
+                } else {
+                    req.flash('success', 'Listing has been successfully created.');
+                    res.redirect('/market');
+                }
             });
     });
 
@@ -43,10 +61,11 @@ module.exports = function (app, dbcon) {
         var listingId = req.params.id;
         dbcon.query("SELECT * FROM listings WHERE id = ?", [listingId], function (err, rows) {
             if (err) {
-                throw err;
+                res.render('error');
             }
             if (!rows.length) {
-                res.end("No listing with such id");
+                req.flash('warning', 'No listing found with that ID.');
+                res.redirect('/market');
             } else {
                 res.render("viewListing", {listing: rows[0]});
             }
@@ -57,25 +76,29 @@ module.exports = function (app, dbcon) {
         var listingId = req.query.id;
         dbcon.query("SELECT * FROM listings where id = ?", [listingId], function (err, result) {
             if (!result.length) {
-                res.end("No such listing");
+                req.flash('warning', 'No listing found with that ID.');
+                res.redirect('/market');
             } else {
                 if (req.user.user_id != result[0].user_id) {
                     if (hasEnoughFunds()) {
                         if (performTransaction()) {
                             dbcon.query("DELETE FROM listings WHERE id = ?", [listingId], function (err, rows) {
                                 if (err) {
-                                    throw err;
+                                    res.render('error');
                                 }
                                 addListingToCompleted(result[0], dbcon, req.user.user_id);
                                 notifySeller();
-                                res.end("Transaction was successful");
+                                req.flash('success', 'Transaction successful.');
+                                res.redirect('/market');
                             });
                         } else {
-                            res.end("There was an error with your transaction. Please, retry later.")
+                            req.flash('warning', 'There was an error with your transaction. Please, retry later.');
+                            res.redirect('/market');
                         }
                     }
                 } else {
-                    res.end("You can't buy your own listings");
+                    req.flash('warning', 'You cannot buy your own listings.');
+                    res.redirect('/market');
                 }
             }
         });
