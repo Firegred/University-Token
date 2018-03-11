@@ -1,3 +1,4 @@
+// Imports
 const express = require('express');
 const mysql = require('mysql');
 const path = require('path');
@@ -6,15 +7,22 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const flash = require('connect-flash');
 
 var app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
-app.use(session({secret: "1"})); // Please insert random string for secret
+app.use(session({secret: "123", resave: true, saveUninitialized: false})); // Please insert random string for secret
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
+app.use(function(req, res, next){
+    res.locals.success = req.flash('success');
+    res.locals.warning = req.flash('warning');
+    next();
+});
 app.use(bodyParser.urlencoded({extended: true}));
 
 const dbConfig = JSON.parse(fs.readFileSync("config/database.json"));

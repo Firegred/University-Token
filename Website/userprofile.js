@@ -1,20 +1,14 @@
 module.exports = function (app, dbcon, smtpTransport, host) {
 
-    app.get("/user/:id", function(req, res) {
-        var id = req.params.id;
-        var databaseQuery = "SELECT * FROM perm_users WHERE user_id =" + id;
-        dbcon.query(databaseQuery, function(err, result) {
-            if(err) {
-                throw err;
-            }
-            console.log(result);
-            // temporary variable
-            var myid = 0;
-            //Checking if user is authenticated
-            if(req.isAuthenticated()) {
-                //Checking if user's profile is personal
-                if(req.user.user_id == id) {
-                    //If true, render use's personal profile page
+    app.get("/user/:id", function (req, res) {
+            var id = req.params.id;
+            var databaseQuery = "SELECT * FROM perm_users WHERE user_id = ?";
+            dbcon.query(databaseQuery,[id], function (err, result) {
+                if (err) {
+                    res.render('error');
+                }
+                if (req.isAuthenticated() && req.user.user_id == id) {
+                    // Render personal page
                     res.render("myUserPage", {
                         firstName: result[0].first_name,
                         lastName: result[0].last_name,
@@ -24,30 +18,10 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                         year: result[0].birth_year,
                         university: result[0].university,
                         country: result[0].country,
-                        state: result[0].state
-
+                        state: result[0].state,
+                        user: req.user
                     });
-                }
-                else if(result.length) {
-                    //Render user page if user page exists
-                    res.render("userPage", {
-                        firstName: result[0].first_name,
-                        lastName: result[0].last_name,
-                        email: result[0].email,
-                        month: result[0].birth_month,
-                        day: result[0].birth_day,
-                        year: result[0].birth_year,
-                        university: result[0].university,
-                        country: result[0].country,
-                        state: result[0].state
-
-                    });
-                }
-                else {
-                    res.end("No user exists");
-                }
-            } else {
-                if(result.length) {
+                } else if (result.length) {
                     //Render public version of user page
                     res.render("userPage", {
                         firstName: result[0].first_name,
@@ -58,15 +32,17 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                         year: result[0].birth_year,
                         university: result[0].university,
                         country: result[0].country,
-                        state: result[0].state
-
+                        state: result[0].state,
+                        user: req.user
                     });
                 } else {
-                    res.end("No user exists");
+                    req.flash('warning', 'No user exists with that id.');
+                    res.redirect('/');
                 }
-            }
-        });
-    });
+            });
+        }
+    )
+    ;
 
     app.get('/resetpassword', function (req, res) {
         res.render('resetpassword');
@@ -76,13 +52,13 @@ module.exports = function (app, dbcon, smtpTransport, host) {
         var databaseQuery = "SELECT * FROM reset_pass WHERE email = " + dbcon.escape(req.body.email) + " AND used_flag = 0";
         dbcon.query(databaseQuery, function (err, result) {
             if (err) {
-                throw err;
+                res.render('error');
             }
             if (!result.length) {
                 databaseQuery = "SELECT * FROM perm_users WHERE email = " + dbcon.escape(req.body.email) + ";";
                 dbcon.query(databaseQuery, function (err, result) {
                     if (err) {
-                        throw err;
+                        res.render('error');
                     }
                     if (result.length > 0) {
                         var confirmationToken = (1 + Math.random()).toString(36).substring(2, 18);
@@ -90,7 +66,7 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                             result[0].user_id + ", " + dbcon.escape(confirmationToken) + ", " + dbcon.escape(result[0].email) + ", 0)";
                         dbcon.query(databaseQuery, function (err, result) {
                             if (err) {
-                                throw err;
+                                res.render('error');
                             }
                             var link = "http://" + req.get('host') + "/reset?id=" + confirmationToken;
                             var mailOptions = {
@@ -102,23 +78,23 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                             };
                             smtpTransport.sendMail(mailOptions, function (error, response) {
                                 if (error) {
-                                    console.log(error);
-                                    res.end("error");
+                                    res.render('error');
                                 } else {
-                                    console.log("Message sent: " + response.message);
-                                    res.end("A link has been sent to " + req.body.email + ". Please, check your email.");
+                                    req.flash('success', 'A link to reset your password has been sent to your email.');
+                                    res.redirect('/');
                                 }
                             });
                         });
                     } else {
                         // If user is not actually in the database [not registered / haven't confirmed registration],
                         // do not send an email while saying that we did to avoid disclosing info about users of the website
-                        console.log("No user with requested email");
-                        res.end("A link has been sent to " + req.body.email + ". Please, check your email.");
+                        req.flash('success', 'A link to reset your password has been sent to your email.');
+                        res.redirect('/');
                     }
                 });
             } else {
-                res.end("You have already requested a password reset, check your email.")
+                req.flash('warning', 'You have already requested a password reset, please check your email.');
+                res.redirect('/');
             }
         });
     });
@@ -128,30 +104,33 @@ module.exports = function (app, dbcon, smtpTransport, host) {
             var databaseQuery = "SELECT * FROM reset_pass WHERE verification_code =" + dbcon.escape(req.query.id) + " AND used_flag = 0;";
             dbcon.query(databaseQuery, function (err, result) {
                 if (err) {
-                    throw err;
+                    res.render('error');
                 }
                 if (result.length > 0) {
                     res.render('reset');
                 } else {
-                    res.end("This link has expired.")
+                    req.flash('warning', 'This link has expired.');
+                    res.redirect('/');
                 }
             });
         } else {
-            res.end("Wrong confirmation URL");
+            req.flash('warning', 'Wrong confirmation link.');
+            res.redirect('/');
         }
     });
 
     app.post("/reset", function (req, res) {
         var databaseQuery = "SELECT * FROM reset_pass WHERE verification_code =" + dbcon.escape(req.query.id) + " AND used_flag = 0;";
         dbcon.query(databaseQuery, function (err, result) {
-            databaseQuery = "UPDATE perm_users SET password = " + dbcon.escape(req.body.password) + " WHERE user_id = " + result[0].user_id + ";";
+            databaseQuery = "UPDATE perm_users SET password = " + dbcon.escape(bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null)) + " WHERE user_id = " + result[0].user_id + ";";
             databaseQuery += "UPDATE reset_pass SET used_flag = 1 WHERE user_id = " + result[0].user_id + ";";
             dbcon.query(databaseQuery, function (err, result) {
                 if (err) {
-                    throw err;
+                    res.render('error');
                 }
                 console.log(result.affectedRows + " record(s) updated");
-                res.end("Password has been successfully reset");
+                req.flash('success', 'Password has been successfully reset.');
+                res.redirect('/');
             });
         });
     });

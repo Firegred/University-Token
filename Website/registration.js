@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt-nodejs');
 
-
 module.exports = function (app, dbcon, smtpTransport, host) {
 
     app.get("/register", function (req, res) {
         var email = req.query.email;
         res.render("registrationpage", {
-            email: email
+            email: email,
+            user: req.user
         });
     });
 
@@ -26,7 +26,7 @@ module.exports = function (app, dbcon, smtpTransport, host) {
 
         dbcon.query(databaseQuery, function (err, result) {
             if (err) {
-                throw err;
+                res.render('error');
             } else {
                 console.log(result.affectedRows + "records updated.");
                 sendEmailConfirmation(req.body.email, res);
@@ -40,7 +40,8 @@ module.exports = function (app, dbcon, smtpTransport, host) {
             if (!result.length) {
                 return next();
             } else {
-                res.end("This e-mail is already in use.");
+                req.flash('warning', 'This email is already in use.');
+                res.redirect('/register');
             }
         });
     }
@@ -50,11 +51,11 @@ module.exports = function (app, dbcon, smtpTransport, host) {
             var databaseQuery = "SELECT * FROM temp_users WHERE verification_code = " + dbcon.escape(req.query.id);
             dbcon.query(databaseQuery, function (err, result) {
                 if (err) {
-                    throw err;
+                    res.render('error');
                 }
                 if (!result.length) {
-                    console.log("No temp account associated with current email");
-                    res.end("This link has expired.");
+                    req.flash('warning', 'This link has expired.');
+                    res.redirect('/');
                 } else {
                     databaseQuery = "DELETE FROM temp_users WHERE email = " + dbcon.escape(result[0].email) + "; ";
                     databaseQuery += "INSERT INTO perm_users (first_name,last_name,email,birth_month,birth_day,birth_year,university,country,state,zip,password) VALUES (" +
@@ -70,14 +71,18 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                         dbcon.escape(result[0].zip) + "," +
                         dbcon.escape(result[0].password) + ")";
                     dbcon.query(databaseQuery, function (err, result) {
-                        if (err) throw err;
+                        if (err){
+                            res.render('error');
+                        }
                         console.log(result.affectedRows + " record(s) updated");
                     });
-                    res.end("Email " + result[0].email + " has been successfully verified");
+                    req.flash('success', 'Email has been successfully verified.' );
+                    res.redirect('/');
                 }
             });
         } else {
-            res.end("Wrong confirmation URL");
+            req.flash('warning', 'Wrong confirmation URL.');
+            res.redirect('/');
         }
     });
 
@@ -87,7 +92,7 @@ module.exports = function (app, dbcon, smtpTransport, host) {
             dbcon.escape(confirmationToken) + " WHERE email = " + dbcon.escape(email);
         dbcon.query(databaseQuery, function (err, result) {
             if (err) {
-                throw err;
+                res.render('error');
             }
             console.log(email);
             var link = "http://" + host + "/verify?id=" + confirmationToken;
@@ -100,11 +105,11 @@ module.exports = function (app, dbcon, smtpTransport, host) {
             };
             smtpTransport.sendMail(mailOptions, function (error, response) {
                 if (error) {
-                    console.log(error);
-                    res.end("error");
+                    res.render('error');
                 } else {
                     console.log("Message sent: " + response.message);
-                    res.end("Please, check your email to verify your account.");
+                    req.flash('success', 'Please check your email to verify your account.');
+                    res.redirect('/');
                 }
             });
         });

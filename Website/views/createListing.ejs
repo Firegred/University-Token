@@ -13,10 +13,11 @@
 </head>
 
 <body class="bg-light">
+<% include nav.ejs %>
 <div class="container">
 
     <div class="py-5 text-center">
-        <h2>Create a new listing</h2>
+        <h2>Create Listing</h2>
     </div>
 
     <form enctype="multipart/form-data" action="/market/post" method="POST">
@@ -30,7 +31,14 @@
             <div class="col-md-2">
                 <label for="listingCategory">Category</label>
                 <select id="listingCategory" name="listingCategory" class="custom-select" required>
-                    <option>WIP</option>
+                    <option></option>
+                    <option>Home</option>
+                    <option>Entertainment</option>
+                    <option>School</option>
+                    <option>Electronics</option>
+                    <option>Clothing & Accessories</option>
+                    <option>Hobbies</option>
+                    <option>Services</option>
                 </select>
             </div>
             <div class="col-md-2">
@@ -64,7 +72,8 @@
             <div class="col-md-12">
                 <input class="btn btn-primary" type="submit">
                 <label class="btn btn-secondary align-top">
-                    Upload a picture...<input type="file" id="uploadPhoto" name="uploadPhoto" accept="image/*" onchange="previewFile()" hidden>
+                    Upload a picture...<input type="file" id="uploadPhoto" name="uploadPhoto" accept="image/*"
+                                              onchange="previewFile()" hidden>
                 </label>
                 <a class="btn btn-secondary" href="/">Cancel</a>
             </div>
@@ -114,15 +123,13 @@
     }
 </script>
 <script>
-    function previewFile(){
+    function previewFile() {
         var preview = document.getElementById("preview");
-        var file    = document.querySelector('input[type=file]').files[0];
-        var reader  = new FileReader();
-
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
         reader.onloadend = function () {
             preview.src = reader.result;
         }
-
         if (file) {
             reader.readAsDataURL(file); //reads the data as a URL
             preview.hidden = false;
