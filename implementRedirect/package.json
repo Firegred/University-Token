@@ -1,0 +1,16 @@
+{
+	"name": "unitoken",
+	"dependencies": {
+		"body-parser": "^1.18.2",
+		"express": "latest",
+		"mysql": "latest",
+		"nodemailer": "latest",
+		"path": "latest",
+		"express-session": "latest",
+		"passport": "latest",
+		"passport-local": "latest",
+		"cookie-parser": "latest",
+		"bcrypt-nodejs": "latest",
+		"connect-flash": "lastest"
+	}
+}
