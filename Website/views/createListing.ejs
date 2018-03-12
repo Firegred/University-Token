@@ -47,7 +47,7 @@
                 <label for="listingPrice">Price</label>
                 <input type="number" id="listingPrice" name="listingPrice" class="form-control currency"
                        placeholder="123.45" required>
-                <div class="invalid-feedback">Price should be more than 0</div>
+                <div class="invalid-feedback" id="price_feedback"></div>
             </div>
             <div class="col-md-2">
                 <img class="img-fluid" id="preview" hidden>
@@ -77,11 +77,11 @@
 
         <br>
 
-		<textarea class="form-control" id="wallet" name="wallet" rows="1" style="display:none"></textarea>
+        <textarea class="form-control" id="wallet" name="wallet" rows="1" style="display:none"></textarea>
         <div class="row">
             <div class="col-md-12">
                 <input class="btn btn-primary" id="_submit" type="submit">
-				<h3 id="metamask">Get MetaMask to create a Listing</h3>
+                <h3 id="metamask">Get MetaMask to create a Listing</h3>
                 <label class="btn btn-secondary align-top">
                     Upload a picture...<input type="file" id="uploadPhoto" name="uploadPhoto" accept="image/*"
                                               onchange="previewFile()" hidden>
@@ -97,32 +97,32 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/web3.min.js"></script>
 <script>
-if(typeof web3 !== 'undefined') {
-    web3 = new Web3(window.web3.currentProvider);
-     var account = web3.eth.accounts[0];
-	 //Check if user is logged in
-	 web3.eth.getAccounts(function(err, accounts) {
-		if(accounts.length == 0) {
-			document.getElementById("_submit").hidden = true;
-			document.getElementById("metamask").innerHTML = "Log into MetaMask";
-			document.getElementById("metamask").hidden = false;
-		}
-		else {
-			var accountInterval = setInterval(function() {
-            if (web3.eth.accounts[0] !== account) {
-                account = web3.eth.accounts[0];
+    if(typeof web3 !== 'undefined') {
+        web3 = new Web3(window.web3.currentProvider);
+        var account = web3.eth.accounts[0];
+        //Check if user is logged in
+        web3.eth.getAccounts(function(err, accounts) {
+            if(accounts.length == 0) {
+                document.getElementById("_submit").hidden = true;
+                document.getElementById("metamask").innerHTML = "Log into MetaMask";
+                document.getElementById("metamask").hidden = false;
             }
-            document.getElementById("wallet").value = account;
-			document.getElementById("metamask").hidden = true;
-            console.log(account);
-			},100 );
-		}
-	 });
-}
-else {
-	document.getElementById("_submit").hidden = true;
-	document.getElementById("metamask").hidden = false;
-}
+            else {
+                var accountInterval = setInterval(function() {
+                    if (web3.eth.accounts[0] !== account) {
+                        account = web3.eth.accounts[0];
+                    }
+                    document.getElementById("wallet").value = account;
+                    document.getElementById("metamask").hidden = true;
+                    console.log(account);
+                },100 );
+            }
+        });
+    }
+    else {
+        document.getElementById("_submit").hidden = true;
+        document.getElementById("metamask").hidden = false;
+    }
 
     const PRECISION = 8;
     // Function which restricts field's input to a number with 0 to PRECISION digits precision
@@ -192,8 +192,14 @@ else {
         }
 
         var price = document.getElementById("listingPrice");
+        var fb = document.getElementById("price_feedback");
         if (price.value == 0.0) {
             price.classList.add("is-invalid");
+            fb.innerText = "Price should be more than 0.";
+            all_fields_completed = false;
+        } else if(price.value.length > 30){
+            price.classList.add("is-invalid");
+            fb.innerText = "Price should be less then 30 characters.";
             all_fields_completed = false;
         } else {
             price.classList.remove("is-invalid");
