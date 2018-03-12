@@ -58,7 +58,7 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                 console.log(err);
                 res.render('error');
             }
-            if (!result.length) {
+            if (result.length == 0) {
                 databaseQuery = "SELECT * FROM perm_users WHERE email = " + dbcon.escape(email) + ";";
                 dbcon.query(databaseQuery, function (err, result) {
                     if (err) {
