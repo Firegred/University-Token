@@ -23,18 +23,19 @@ module.exports = function (app, dbcon, passport) {
     passport.use('local-login',
         new LocalStrategy({
                 usernameField: 'email',
-                passwordField: 'password'
+                passwordField: 'password',
+                passReqToCallback : true
             },
-            function (email, password, done) {
+            function (req, email, password, done) {
                 dbcon.query("SELECT * FROM perm_users WHERE email = " + dbcon.escape(email), function (err, rows) {
                     if (err) { // Database error
                         return done(err);
                     }
                     if (!rows.length) { // No user with such email
-                        return done(null, false);
+                        return done(null, false, req.flash('warning', "Wrong email and/or password."));
                     }
                     if (!bcrypt.compareSync(password, rows[0].password)) { // Passwords do not match
-                        return done(null, false);
+                        return done(null, false, req.flash('warning', "Wrong email and/or password."));
                     }
                     return done(null, rows[0]);
                 });
@@ -46,7 +47,8 @@ module.exports = function (app, dbcon, passport) {
     Else, redirect them to the page they came from
      */
     app.post("/login", passport.authenticate('local-login', {
-            failureRedirect: "/login"
+            failureRedirect: "/login",
+            failureFlash : true
         }),
         function (req, res) {
             if (req.body.remember) { // Manages the longevity of cookies (currently not supported)
