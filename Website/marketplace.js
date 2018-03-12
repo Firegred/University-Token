@@ -96,7 +96,8 @@ module.exports = function (app, dbcon) {
                     console.log(wallet);
 					if(req.isAuthenticated()) {
 						if(req.user.user_id == result[0].user_id) {
-							auth = 0;
+							//Value for if the user owns the listing
+							auth = -1;
 						}
 					}
 					console.log("auth" + auth)
