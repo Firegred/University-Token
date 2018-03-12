@@ -17,6 +17,7 @@
 </head>
 <body>
 <% include nav.ejs%>
+<% include flash.ejs %>
 <main class="row">
     <div id="sidebar" class="col-12 col-lg-3">
         <div id="searchwrapper" class="container">
@@ -113,6 +114,7 @@
                     <div class="col-9">
                         <p class="listingbio"><%= listings[i].bio %></p>
                     </div>
+						<a class="btn btn-primary" id="view" href="/market/view/<%= listings[i].id%>">View</a>
                     <div class="col-3">
                     </div>
                 </div>

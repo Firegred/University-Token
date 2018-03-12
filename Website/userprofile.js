@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt-nodejs');
+
 module.exports = function (app, dbcon, smtpTransport, host) {
 
     app.get("/user/:id", function (req, res) {
@@ -49,15 +51,18 @@ module.exports = function (app, dbcon, smtpTransport, host) {
     });
 
     app.post('/resetpassword', function (req, res) {
-        var databaseQuery = "SELECT * FROM reset_pass WHERE email = " + dbcon.escape(req.body.email) + " AND used_flag = 0";
+        var email = (req.isAuthenticated()) ? req.user.email : req.body.email;
+        var databaseQuery = "SELECT * FROM reset_pass WHERE email = " + dbcon.escape(email) + " AND used_flag = 0";
         dbcon.query(databaseQuery, function (err, result) {
             if (err) {
+                console.log(err);
                 res.render('error');
             }
-            if (!result.length) {
-                databaseQuery = "SELECT * FROM perm_users WHERE email = " + dbcon.escape(req.body.email) + ";";
+            if (result.length == 0) {
+                databaseQuery = "SELECT * FROM perm_users WHERE email = " + dbcon.escape(email) + ";";
                 dbcon.query(databaseQuery, function (err, result) {
                     if (err) {
+                        console.log(err);
                         res.render('error');
                     }
                     if (result.length > 0) {
@@ -67,17 +72,19 @@ module.exports = function (app, dbcon, smtpTransport, host) {
                         dbcon.query(databaseQuery, function (err, result) {
                             if (err) {
                                 res.render('error');
+                                console.log(err);
                             }
                             var link = "http://" + req.get('host') + "/reset?id=" + confirmationToken;
                             var mailOptions = {
                                 from: 'Do Not Reply <unitokenemailconfirmation@gmail.com>',
-                                to: req.body.email,
+                                to: email,
                                 subject: 'Unitoken password reset',
                                 html: 'Please click on the link to reset your password.<br><a href=' +
                                 link + '>Click here to reset your password</a>'
                             };
                             smtpTransport.sendMail(mailOptions, function (error, response) {
                                 if (error) {
+                                    console.log(err);
                                     res.render('error');
                                 } else {
                                     req.flash('success', 'A link to reset your password has been sent to your email.');

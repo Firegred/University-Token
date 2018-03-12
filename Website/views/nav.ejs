@@ -4,9 +4,8 @@
 <div class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="/">UniToken</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        <button class="navbar-toggler navbar-toggler-icon" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -15,7 +14,11 @@
                     <a class="nav-link" href="/market">Marketplace <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
+<<<<<<< HEAD
                     <a class="nav-link" href="#">Profile</a>
+=======
+                    <a class="nav-link" href="<%= (typeof user == 'undefined') ? '/login' : '/user/' + user.user_id %>">Profile</a>
+>>>>>>> 96abefdc598665d72d1d1870b7be9faa5ce61009
                 </li>
             </ul>
             <% if (typeof user != 'undefined') { %>

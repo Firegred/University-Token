@@ -52,8 +52,17 @@ module.exports = function (app, dbcon) {
      */
     app.post("/market/post", upload.single("uploadPhoto"), function (req, res) {
         var picture = (typeof req.file == "undefined") ? "" : req.file.path; // If no picture is uploaded, picture path is empty
+		
+		var walletQuery = "UPDATE perm_users SET wallet=? WHERE user_id=?";
+        console.log(req.user.user_id);
+        dbcon.query(walletQuery, [req.body.wallet, req.user.user_id], function(err, result) {
+            console.log("Wallet " + req.body.wallet + " has been added to database");
+        });
+        dbcon.commit();
+		
         var databaseQuery = "INSERT INTO listings (user_id, name, price, category, bio, info, picture, university) VALUES " +
             "(?, ?, ?, ?, ?, ?, ?, ?)";
+            
         dbcon.query(databaseQuery, [req.user.user_id, req.body.listingName, req.body.listingPrice,
                 req.body.listingCategory, req.body.listingBio, req.body.listingInfo, picture, req.user.university],
             function (err, result) {
@@ -68,19 +77,46 @@ module.exports = function (app, dbcon) {
     });
 
     app.get("/market/view/:id", function (req, res) {
-        var listingId = req.params.id;
+		var listingId = req.params.id;
+        var wallet = 'nothing';
+		var auth = 0;
+		
+		if(req.isAuthenticated()) {
+			auth = 1;
+			console.log("is logged in");
+			console
+		}
         dbcon.query("SELECT * FROM listings WHERE id = ?", [listingId], function (err, rows) {
             if (err) {
                 res.render('error');
             }
             if (!rows.length) {
-                req.flash('warning', 'No listing found with that ID.');
-                res.redirect('/market');
+				 req.flash('warning', 'No listing found with that ID.');
+                 res.redirect('/market');
             } else {
-                res.render("viewListing", {listing: rows[0]});
+                 var list = rows[0];
+                 var wallet = 0;
+                 console.log(rows[0].user_id);
+                 dbcon.query("SELECT * FROM perm_users WHERE user_id = ?", [rows[0].user_id], function (err, result) {
+                     if(err) {
+                        throw err;
+                     }
+                    else {
+                    wallet = result[0].wallet.toString();
+                    console.log(wallet);
+					if(req.isAuthenticated()) {
+						if(req.user.user_id == result[0].user_id) {
+							auth = 0;
+						}
+					}
+					console.log("auth" + auth)
+                    res.render("viewListing", {listing: list, wallet: wallet, auth: auth});
+                 }
+              });
+            console.log(wallet);
             }
         });
-    });
+	});
 
     app.post("/market/buy", isLoggedIn, function (req, res) {
         var listingId = req.query.id;
@@ -91,7 +127,7 @@ module.exports = function (app, dbcon) {
             } else {
                 if (req.user.user_id != result[0].user_id) {
                     if (hasEnoughFunds()) {
-                        if (performTransaction()) {
+                        if (performTransaction(req.body.flag)) {
                             dbcon.query("DELETE FROM listings WHERE id = ?", [listingId], function (err, rows) {
                                 if (err) {
                                     res.render('error');
@@ -118,8 +154,9 @@ module.exports = function (app, dbcon) {
         return true;
     }
 
-    function performTransaction() {
-        return true;
+    function performTransaction(flag) {
+        if(flag == "true") return true;
+        else return false;
     }
 
     function addListingToCompleted(listing, dbcon, buyerId) {
