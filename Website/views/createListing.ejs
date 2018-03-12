@@ -80,7 +80,8 @@
 		<textarea class="form-control" id="wallet" name="wallet" rows="1" style="display:none"></textarea>
         <div class="row">
             <div class="col-md-12">
-                <input class="btn btn-primary" type="submit">
+                <input class="btn btn-primary" id="_submit" type="submit">
+				<h3 id="metamask">Get MetaMask to create a Listing</h3>
                 <label class="btn btn-secondary align-top">
                     Upload a picture...<input type="file" id="uploadPhoto" name="uploadPhoto" accept="image/*"
                                               onchange="previewFile()" hidden>
@@ -99,13 +100,28 @@
 if(typeof web3 !== 'undefined') {
     web3 = new Web3(window.web3.currentProvider);
      var account = web3.eth.accounts[0];
-     var accountInterval = setInterval(function() {
+	 //Check if user is logged in
+	 web3.eth.getAccounts(function(err, accounts) {
+		if(accounts.length == 0) {
+			document.getElementById("_submit").hidden = true;
+			document.getElementById("metamask").innerHTML = "Log into MetaMask";
+			document.getElementById("metamask").hidden = false;
+		}
+		else {
+			var accountInterval = setInterval(function() {
             if (web3.eth.accounts[0] !== account) {
                 account = web3.eth.accounts[0];
             }
             document.getElementById("wallet").value = account;
+			document.getElementById("metamask").hidden = true;
             console.log(account);
-    },100 );
+			},100 );
+		}
+	 });
+}
+else {
+	document.getElementById("_submit").hidden = true;
+	document.getElementById("metamask").hidden = false;
 }
 
     const PRECISION = 8;
