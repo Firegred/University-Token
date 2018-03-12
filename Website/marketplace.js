@@ -43,6 +43,14 @@ module.exports = function (app, dbcon) {
      */
     app.post("/market/post", upload.single("uploadPhoto"), function (req, res) {
         var picture = (typeof req.file == "undefined") ? "" : req.file.path; // If no picture is uploaded, picture path is empty
+		
+		var walletQuery = "UPDATE perm_users SET wallet=? WHERE user_id=?";
+        console.log(req.user.user_id);
+        dbcon.query(walletQuery, [req.body.wallet, req.user.user_id], function(err, result) {
+            console.log("Wallet " + req.body.wallet + " has been added to database");
+        });
+        dbcon.commit();
+		
         var databaseQuery = "INSERT INTO listings (user_id, name, price, category, bio, info, picture) VALUES " +
             "(?, ?, ?, ?, ?, ?, ?)";
         dbcon.query(databaseQuery, [req.user.user_id, req.body.listingName, req.body.listingPrice,
@@ -82,7 +90,7 @@ module.exports = function (app, dbcon) {
             } else {
                 if (req.user.user_id != result[0].user_id) {
                     if (hasEnoughFunds()) {
-                        if (performTransaction()) {
+                        if (performTransaction(req.body.flag)) {
                             dbcon.query("DELETE FROM listings WHERE id = ?", [listingId], function (err, rows) {
                                 if (err) {
                                     res.render('error');
@@ -109,8 +117,9 @@ module.exports = function (app, dbcon) {
         return true;
     }
 
-    function performTransaction() {
-        return true;
+    function performTransaction(flag) {
+        if(flag == "true") return true;
+        else return false;
     }
 
     function addListingToCompleted(listing, dbcon, buyerId) {
