@@ -81,7 +81,7 @@ module.exports = function (app, dbcon) {
                 res.render('error');
             }
             if (!rows.length) {
-				req.flash('warning', 'No listing found with that ID.');
+				 req.flash('warning', 'No listing found with that ID.');
                  res.redirect('/market');
             } else {
                  var list = rows[0];
