@@ -33,7 +33,27 @@ module.exports = function (app, dbcon) {
                 }
                 else {
                     var sortedListings = [];
-                    console.log(Array.isArray(req.query.school));
+                    var schools = makeArray(req.query.school);
+                    var categories = makeArray(req.query.category);
+
+                    if(schools.length == 0) {
+                        schools = ['UC Berkeley', 'UC Davis', 'UC Los Angeles', 'UC Riverside', 'UC Irvine', 'UC San Franciso', 'UC Santa Cruz', 'UC Santa Barbra'];
+                    }
+                    if(categories.length == 0) {
+                        categories = ['Home', 'Entertainment', 'School', 'Electronics', 'Clothing & Accessories', 'Hobbies', 'Services'];
+                    }
+
+                    for(var listing in result) {
+                        if(schools.includes(result[listing].university) && categories.includes(result[listing].category)) {
+                            if(req.query.search == '') {
+                                sortedListings.push(result[listing]);
+                            }
+                            else if(result[listing].name.indexOf(req.query.search) > -1) {
+                                sortedListings.push(result[listing]);
+                            }
+                            console.log(result[listing].name.indexOf(req.query.search));
+                        }
+                    }
                     res.render('marketplace', {listings: sortedListings, user: req.user});
                     return;
                 }
@@ -176,4 +196,16 @@ module.exports = function (app, dbcon) {
     function notifySeller() {
 
     }
+}
+
+function makeArray(item) {
+    var arr;
+    if(item == undefined) {
+        arr = [];
+    }
+    else if(Array.isArray(item) == false)
+        arr = [item];
+    else 
+        arr = item;
+    return arr;
 }
