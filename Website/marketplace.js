@@ -67,19 +67,46 @@ module.exports = function (app, dbcon) {
     });
 
     app.get("/market/view/:id", function (req, res) {
-        var listingId = req.params.id;
+		var listingId = req.params.id;
+        var wallet = 'nothing';
+		var auth = 0;
+		
+		if(req.isAuthenticated()) {
+			auth = 1;
+			console.log("is logged in");
+			console
+		}
         dbcon.query("SELECT * FROM listings WHERE id = ?", [listingId], function (err, rows) {
             if (err) {
                 res.render('error');
             }
             if (!rows.length) {
-                req.flash('warning', 'No listing found with that ID.');
-                res.redirect('/market');
+				req.flash('warning', 'No listing found with that ID.');
+                 res.redirect('/market');
             } else {
-                res.render("viewListing", {listing: rows[0]});
+                 var list = rows[0];
+                 var wallet = 0;
+                 console.log(rows[0].user_id);
+                 dbcon.query("SELECT * FROM perm_users WHERE user_id = ?", [rows[0].user_id], function (err, result) {
+                     if(err) {
+                        throw err;
+                     }
+                    else {
+                    wallet = result[0].wallet.toString();
+                    console.log(wallet);
+					if(req.isAuthenticated()) {
+						if(req.user.user_id == result[0].user_id) {
+							auth = 0;
+						}
+					}
+					console.log("auth" + auth)
+                    res.render("viewListing", {listing: list, wallet: wallet, auth: auth});
+                 }
+              });
+            console.log(wallet);
             }
         });
-    });
+	});
 
     app.post("/market/buy", isLoggedIn, function (req, res) {
         var listingId = req.query.id;
