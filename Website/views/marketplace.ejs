@@ -18,11 +18,89 @@
 <body>
 <% include nav.ejs%>
 <main class="row">
-    <div id="sidebar" class="col-2">
+    <div id="sidebar" class="col-12 col-lg-3">
         <div id="searchwrapper" class="container">
+            <form action="/market" method="get">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </div>
+                <div class="bold">
+                    University
+                </div>
+                <ul id="school-list" class="checkboxes">
+                    <li>
+                        <input type="checkbox" id="UCB" name="school" value="UC Berkeley">
+                        <label for="UCB">UC Berkeley</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="UCD" name="school" value="UC Davis">
+                        <label for="UCB">UC Davis</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="UCLA" name="school" value="UC Los Angeles">
+                        <label for="UCLA">UC Los Angeles</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="UCR" name="school" value="UC Riverside">
+                        <label for="UCR">UC Riverside</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="UCI" name="school" value="UC Irvine">
+                        <label for="UCI">UC Irvine</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="UCSF" name="school" value="UC San Francisco">
+                        <label for="UCSF">UC San Francisco</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="UCSC" name="school" value="UC Santa Cru">
+                        <label for="UCSC">UC Santa Cruz</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="UCSB" name="school" value="UC Santa Barbra">
+                        <label for="UCSB">UC Santa Barbra</label>
+                    </li>
+                </ul>
+                <div class="bold">
+                    Category
+                </div>
+                 <ul id="category-list" class="checkboxes">
+                        <li>
+                            <input type="checkbox" id="home" name="category" value="Home">
+                            <label for="home">Home</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="entertainment" name="category" value="Entertainment">
+                            <label for="entertainment">Entertainment</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="school" name="category" value="School">
+                            <label for="school">School</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="electronics" name="category" value="Electronics">
+                            <label for="electronics">Electronics</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="clothing" name="category" value="Clothing & Accessories">
+                            <label for="clothing">Clothing & Accessories</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="hobbies" name="category" value="Hobbies">
+                            <label for="hobbies">Hobbies</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="services" name="category" value="Services">
+                            <label for="services">Services</label>
+                        </li>
+                    </ul>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="col-10">
+    <div class="col-12 col-lg-9">
         <div id="listingwrapper" class="container-fluid">
             <% for(let i = 0; i < listings.length; i++) { %>
             <div class="listing">

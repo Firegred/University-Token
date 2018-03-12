@@ -27,7 +27,16 @@ module.exports = function (app, dbcon) {
             if (err){
                 res.render('error');
             } else {
-                res.render('marketplace', {listings: result, user: req.user});
+                if(JSON.stringify(req.query) === '{}') {
+                    res.render('marketplace', {listings: result, user: req.user});
+                    return;
+                }
+                else {
+                    var sortedListings = [];
+                    console.log(Array.isArray(req.query.school));
+                    res.render('marketplace', {listings: sortedListings, user: req.user});
+                    return;
+                }
             }
         });
     })
@@ -43,10 +52,10 @@ module.exports = function (app, dbcon) {
      */
     app.post("/market/post", upload.single("uploadPhoto"), function (req, res) {
         var picture = (typeof req.file == "undefined") ? "" : req.file.path; // If no picture is uploaded, picture path is empty
-        var databaseQuery = "INSERT INTO listings (user_id, name, price, category, bio, info, picture) VALUES " +
-            "(?, ?, ?, ?, ?, ?, ?)";
+        var databaseQuery = "INSERT INTO listings (user_id, name, price, category, bio, info, picture, university) VALUES " +
+            "(?, ?, ?, ?, ?, ?, ?, ?)";
         dbcon.query(databaseQuery, [req.user.user_id, req.body.listingName, req.body.listingPrice,
-                req.body.listingCategory, req.body.listingBio, req.body.listingInfo, picture],
+                req.body.listingCategory, req.body.listingBio, req.body.listingInfo, picture, req.user.university],
             function (err, result) {
                 if (err){
                     console.log(err);
