@@ -42,7 +42,7 @@
 	<% }; %>
 	<%if (auth == 0) { %>
 	<% }; %>
-	<a id="warn"></a>
+	<div id="warn"></div>
 	<a class="btn btn-primary" id="back" href="../">GoBack</a>
 </body>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
@@ -89,24 +89,24 @@ web3.version.getNetwork((err, netId) => {
             }
 			if(web3.eth.accounts[0]) found=1;
 			if(network != 3) {
-					if(document.getElementById("buy"))
-						document.getElementById("buy").style.visibility = "hidden";
+					if(document.getElementById("buy") != null)
+						document.getElementById("buy").hidden = true;
 					document.getElementById("warn").innerHTML = "Choose Ropsten Test Network on MetaMask to buy this listing";
-					document.getElementById("warn").style.visibility = "visible";
-					document.getElementById("back").style.visibility = "visible";
+					document.getElementById("warn").hidden = false;
+					document.getElementById("back").hidden = false;
 			}
 			if(found == 1) {
 					document.getElementById("warn").innerHTML = "";
-					document.getElementById("warn").style.visibility = "none";
+					document.getElementById("warn").hidden = false;
 					if(document.getElementById("buy"))
-						document.getElementById("buy").style.visibility = "visible";
+						document.getElementById("buy").hidden = false;
 			}
 			else {
 				if(document.getElementById("buy"))
-					document.getElementById("buy").style.visibility = "hidden";
+					document.getElementById("buy").hidden = true;
 				document.getElementById("warn").innerHTML = "Log into MetaMask to buy this listing";
-				document.getElementById("warn").style.visibility = "visible";
-				document.getElementById("back").style.visibility = "visible";
+				document.getElementById("warn").hidden = false;
+				document.getElementById("back").hidden = false;
 			}
     },100 );
     var target = document.getElementById("wallet").innerHTML;
