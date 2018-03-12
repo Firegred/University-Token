@@ -84,7 +84,6 @@ module.exports = function (app, dbcon) {
 		if(req.isAuthenticated()) {
 			auth = 1;
 			console.log("is logged in");
-			console
 		}
         dbcon.query("SELECT * FROM listings WHERE id = ?", [listingId], function (err, rows) {
             if (err) {
