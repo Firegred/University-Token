@@ -33,23 +33,32 @@
 
 .checkboxes {
 	list-style: none;
-	padding-left: 0px;
 }
 
 #listingwrapper {
+	padding-bottom: 16px;
+	padding-left: 0px;
 }
 
 .listing {
 	background-color: rgb(245,245,245);
-
+	padding: 16px;
 	margin-top: 25px;
 	box-shadow: 0 -4px 8px 0 rgba(0, 0, 0, 0.05), 0 -2px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .listing img {
 	height: 150px;
-	width: 150px;
-	float: right;
+}
+
+.listing-body {
+	color: rgb(50, 50, 50);
+	font-weight: bold;
+	font-size: 28px;
+}
+
+.listing-name, .listing-name:hover {
+	color: rgb(50, 50, 50);
 }
 
 footer {
