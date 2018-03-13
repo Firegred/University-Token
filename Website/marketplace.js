@@ -130,7 +130,7 @@ module.exports = function (app, dbcon) {
 						}
 					}
 					console.log("auth" + auth)
-                    res.render("viewListing", {listing: list, wallet: wallet, auth: auth});
+                    res.render("viewListing", {listing: list, wallet: wallet, auth: auth, user: req.user});
                  }
               });
             console.log(wallet);
