@@ -125,6 +125,9 @@
                     </div>
 						<a class="btn btn-primary" id="view" href="/market/view/<%= listings[i].id%>">View</a>
                     <div class="col-3">
+                        <%if(listings[i].picture != "") {%>
+                            <img class="img-fluid" src="<%=listings[i].picture.substring(listings[i].picture.indexOf("/"))%>" >
+                        <%}%>
                     </div>
                 </div>
             </div>
