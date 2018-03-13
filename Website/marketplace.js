@@ -48,7 +48,7 @@ module.exports = function (app, dbcon) {
                             if(req.query.search == '') {
                                 sortedListings.push(result[listing]);
                             }
-                            else if(result[listing].name.indexOf(req.query.search) > -1) {
+                            else if(result[listing].name.toLowerCase().indexOf(req.query.search.toLowerCase()) > -1) {
                                 sortedListings.push(result[listing]);
                             }
                             console.log(result[listing].name.indexOf(req.query.search));
