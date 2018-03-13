@@ -8,6 +8,7 @@
     <title>Create a listing</title>
 </head>
 <body class="bg-light">
+<% include nav.ejs %>
 
     <table class="table">
         <tbody>
@@ -41,9 +42,9 @@
     <button class="btn btn-primary" id="buy" onClick="buy()">Purchase</button>
 	<% }; %>
 	<%if (auth == 0) { %>
+	<a class="btn btn-primary" href="../">GoBack</a>
 	<% }; %>
-	<div id="warn"></div>
-	<a class="btn btn-primary" id="back" href="../">GoBack</a>
+
 </body>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <script src="http://www.atlasestateagents.co.uk/javascript/tether.min.js"></script>
@@ -51,63 +52,15 @@
 <script>
      var abi = 
 [{"constant":false,"inputs":[{"name":"newSellPrice","type":"uint256"},{"name":"newBuyPrice","type":"uint256"}],"name":"setPrices","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"burn","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"sellPrice","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"mintedAmount","type":"uint256"}],"name":"mintToken","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"tokensIssued","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"buyPrice","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"buyCounter","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"buy","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"frozenAccount","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"weiCounter","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"},{"name":"_extraData","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"freeze","type":"bool"}],"name":"freezeAccount","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"target","type":"address"},{"indexed":false,"name":"frozen","type":"bool"}],"name":"FrozenFunds","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Burn","type":"event"}];
-if(typeof web3 == 'undefined') {
-	console.log("should work");
-	if(document.getElementById("buy"))
-	document.getElementById("buy").style.visibility = "hidden";
-	document.getElementById("warn").innerHTML = "Get MetaMask to buy this listing";
-	document.getElementById("warn").style.visibility = "visible";
-	document.getElementById("back").style.visibility = "visible";
-}
-else if(typeof web3 !== 'undefined') {
-	 document.getElementById("warn").style.visibility = "hidden";
-	 web3 = new Web3(window.web3.currentProvider);
-	var network = 0;
-web3.version.getNetwork((err, netId) => {
-	switch (netId) {
-    case "1":
-      network = 1
-      break
-    case "2":
-      network = 2
-      break
-    case "3":
-      network = 3
-	  console.log("network is " + network);
-      break
-    default:
-      console.log('This is an unknown network.')
-  }
-})
-	 
-	 var found = 0;
+
+
+if(typeof web3 !== 'undefined') {
+    web3 = new Web3(window.web3.currentProvider);
      var account = web3.eth.accounts[0];
      var accountInterval = setInterval(function() {
             if (web3.eth.accounts[0] !== account) {
                 account = web3.eth.accounts[0];
-				found = 1;
             }
-			if(web3.eth.accounts[0]) found=1;
-			if(network != 3) {
-					if(document.getElementById("buy") != null)
-						document.getElementById("buy").hidden = true;
-					document.getElementById("warn").innerHTML = "Choose Ropsten Test Network on MetaMask to buy this listing";
-					document.getElementById("warn").hidden = false;
-					document.getElementById("back").hidden = false;
-			}
-			if(found == 1) {
-					document.getElementById("warn").innerHTML = "";
-					document.getElementById("warn").hidden = false;
-					if(document.getElementById("buy"))
-						document.getElementById("buy").hidden = false;
-			}
-			else {
-				if(document.getElementById("buy"))
-					document.getElementById("buy").hidden = true;
-				document.getElementById("warn").innerHTML = "Log into MetaMask to buy this listing";
-				document.getElementById("warn").hidden = false;
-				document.getElementById("back").hidden = false;
-			}
     },100 );
     var target = document.getElementById("wallet").innerHTML;
     console.log(target);
@@ -117,8 +70,6 @@ web3.version.getNetwork((err, netId) => {
     var finalprice = price * 1000000000000000000;
     console.log(price);
     console.log("test");
-	
-	
     function buy() {
         contractinstance.transfer(target, finalprice, {from: web3.eth.accounts[0], gas: 3000000}, function(err, result) {
             if(err) {
